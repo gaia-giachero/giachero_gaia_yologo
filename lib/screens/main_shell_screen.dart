@@ -7,6 +7,8 @@ import 'package:giachero_gaia_yologo/screens/home_screen.dart';
 import 'package:giachero_gaia_yologo/screens/profile_screen.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 
+import '../theme/app_colors.dart';
+
 class MainShellScreen extends StatefulWidget {
   const MainShellScreen({super.key});
 
@@ -30,7 +32,8 @@ class _MainShellScreenState extends State<MainShellScreen> {
           ProfileScreen(),
         ],
       ),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: 
+      Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.paddingHorizontal,
           vertical: AppSizes.paddingVertical,
@@ -44,7 +47,6 @@ class _MainShellScreenState extends State<MainShellScreen> {
             destinations: const [
               NavigationDestination(
                 icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
                 label: AppStrings.navHome,
               ),
               NavigationDestination(
