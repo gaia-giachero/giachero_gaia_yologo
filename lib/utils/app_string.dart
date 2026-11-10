@@ -6,4 +6,7 @@ class AppStrings {
   // Navigazione
   static const String navHome = 'Home';
   static const String navExplore = 'Esplora';
+  static const String navAdd = 'Add';
+  static const String navFavorite = 'Favorite';
+  static const String navProfile = 'Profile';
 }
