@@ -27,6 +27,14 @@ class AppTheme {
         outlineVariant: p.border,
       ),
       textTheme: _textTheme(p),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: p.primary,
+          foregroundColor: p.surface,
+          disabledBackgroundColor: p.disabled,
+          textStyle: AppTextStyles.label,
+        ),
+      ),
     );
   }
 
