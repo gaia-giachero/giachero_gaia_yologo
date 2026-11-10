@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/utils/helpers.dart';
 
 import 'app_colors.dart';
 import 'app_text_styles.dart';
@@ -34,6 +35,18 @@ class AppTheme {
           disabledBackgroundColor: p.disabled,
           textStyle: AppTextStyles.label,
         ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: p.border,
+        indicatorColor: Colors.transparent,
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? IconThemeData(color: p.primary, size: AppSizes.iconSizeSelected)
+              :  IconThemeData(color: p.disabled, size: AppSizes.iconSize),
+        ),
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        height: AppSizes.navHeight,
       ),
     );
   }
