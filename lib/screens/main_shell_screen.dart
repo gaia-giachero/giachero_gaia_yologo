@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_theme.dart';
 import 'package:giachero_gaia_yologo/screens/add_trip_screen.dart';
 import 'package:giachero_gaia_yologo/screens/explore_screen.dart';
@@ -61,8 +62,8 @@ class _MainShellScreenState extends State<MainShellScreen> {
         icon,
         size: isSelected ? AppSizes.iconSizeSelected : AppSizes.iconSize,
         color: isSelected
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).disabledColor,
+            ? AppColors.of(context).primary
+            : AppColors.of(context).disabled,
       ),
     );
   }
