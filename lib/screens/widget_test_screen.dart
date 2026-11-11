@@ -22,11 +22,11 @@ class WidgetTestScreen extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                'Data singola: ${DateFormatter.formatta(DateTime.now())}',
+                'Data singola: ${DateFormatter.formatta(sampleTrips[0].createdAt)}',
                 style: TextStyle(color: AppColors.of(context).primary),
               ),
               Text(
-                'Intervallo viaggi: ${DateFormatter.formatRange(DateTime(2026, 11, 25), DateTime(2026, 12, 2))}',
+                'Intervallo viaggi: ${DateFormatter.formatRange(sampleTrips[0].departureDate, sampleTrips[0].returnDate)}',
                 style: TextStyle(color: AppColors.of(context).primary),
               ),
               Text(
