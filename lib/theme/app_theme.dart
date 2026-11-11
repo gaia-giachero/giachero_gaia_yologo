@@ -58,7 +58,7 @@ class AppTheme {
   static BoxDecoration navBarDecoration(BuildContext context) {
     return BoxDecoration(
       color: Theme.of(context).colorScheme.outlineVariant,
-      borderRadius: BorderRadius.circular(25.0),
+      borderRadius: BorderRadius.circular(AppSizes.navRadius),
     );
   }
 }
