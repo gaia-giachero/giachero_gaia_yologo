@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:giachero_gaia_yologo/utils/app_string.dart';
+import 'package:giachero_gaia_yologo/theme/app_theme.dart';
 import 'package:giachero_gaia_yologo/screens/add_trip_screen.dart';
 import 'package:giachero_gaia_yologo/screens/explore_screen.dart';
 import 'package:giachero_gaia_yologo/screens/favorites_screen.dart';
@@ -37,10 +37,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
         ),
         child: Container(
           height: AppSizes.navHeight,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            borderRadius: BorderRadius.circular(25.0),
-          ),
+          decoration: AppTheme.navBarDecoration(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
