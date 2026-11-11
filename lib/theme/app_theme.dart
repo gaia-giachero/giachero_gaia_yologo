@@ -36,18 +36,6 @@ class AppTheme {
           textStyle: AppTextStyles.label,
         ),
       ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: p.border,
-        indicatorColor: Colors.transparent,
-        iconTheme: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected)
-              ? IconThemeData(color: p.primary, size: AppSizes.iconSizeSelected)
-              :  IconThemeData(color: p.disabled, size: AppSizes.iconSize),
-        ),
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        height: AppSizes.navHeight,
-      ),
     );
   }
 
@@ -65,5 +53,12 @@ class AppTheme {
       bodySmall: AppTextStyles.caption,
       labelSmall: AppTextStyles.small,
     ).apply(bodyColor: p.textPrimary, displayColor: p.textPrimary);
+  }
+
+  static BoxDecoration navBarDecoration(BuildContext context) {
+    return BoxDecoration(
+      color: Theme.of(context).colorScheme.outlineVariant,
+      borderRadius: BorderRadius.circular(25.0),
+    );
   }
 }
