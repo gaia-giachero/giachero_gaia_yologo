@@ -28,7 +28,7 @@ class AppTheme {
         outlineVariant: p.border,
       ),
       textTheme: _textTheme(p),
-      elevatedButtonTheme: ElevatedButtonThemeData(
+      filledButtonTheme: FilledButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: p.primary,
           foregroundColor: p.surface,
@@ -57,7 +57,7 @@ class AppTheme {
 
   static BoxDecoration navBarDecoration(BuildContext context) {
     return BoxDecoration(
-      color: Theme.of(context).colorScheme.outlineVariant,
+      color: AppColors.of(context).border,
       borderRadius: BorderRadius.circular(AppSizes.navRadius),
     );
   }
