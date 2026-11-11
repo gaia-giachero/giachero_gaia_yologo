@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:giachero_gaia_yologo/utils/app_string.dart';
+import 'package:giachero_gaia_yologo/utils/app_strings.dart';
 import 'package:giachero_gaia_yologo/screens/main_shell_screen.dart';
 
 class LoginScreen extends StatelessWidget {

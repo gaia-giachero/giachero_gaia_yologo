@@ -15,7 +15,7 @@ class AppTextStyles {
     fontFamily: manrope,
     fontSize: 28,
     fontWeight: FontWeight.w700,
-    height: 28 / 36,
+    height: 36 / 28,
   );
 
   static const TextStyle h2 = TextStyle(

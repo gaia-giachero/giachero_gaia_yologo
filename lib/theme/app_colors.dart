@@ -1,4 +1,3 @@
-import 'package:flutter/painting.dart';
 import 'package:flutter/material.dart';
 
 class AppPalette {
