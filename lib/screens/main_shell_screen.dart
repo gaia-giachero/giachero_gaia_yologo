@@ -7,8 +7,6 @@ import 'package:giachero_gaia_yologo/screens/home_screen.dart';
 import 'package:giachero_gaia_yologo/screens/profile_screen.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 
-import '../theme/app_colors.dart';
-
 class MainShellScreen extends StatefulWidget {
   const MainShellScreen({super.key});
 
