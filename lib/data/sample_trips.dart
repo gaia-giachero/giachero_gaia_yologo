@@ -11,7 +11,7 @@ final List<Trip> sampleTrips = [
     price: '250€',
     departureDate: DateTime.now().add(const Duration(days: 2)),
     returnDate: DateTime.now().add(const Duration(days: 5)),
-    type: TripType.cittaCultura,
+    type: TripType.cityAndCulture,
     createdAt: DateTime.now().subtract(const Duration(hours: 4)),
   ),
   // 2. BARCELLONA
@@ -23,7 +23,7 @@ final List<Trip> sampleTrips = [
     price: '490.50€',
     departureDate: DateTime.now().add(const Duration(days: 10)),
     returnDate: DateTime.now().add(const Duration(days: 15)),
-    type: TripType.mareRelax,
+    type: TripType.seaAndRelax,
     createdAt: DateTime.now().subtract(const Duration(days: 1)),
   ),
   // 3. Parigi - Test overflow (titolo e descrizione molto lunghi)
@@ -35,7 +35,7 @@ final List<Trip> sampleTrips = [
     price: '899.99€',
     departureDate: DateTime.now().add(const Duration(days: 6)),
     returnDate: DateTime.now().add(const Duration(days: 12)),
-    type: TripType.zainoInSpalla,
+    type: TripType.backpacking,
     createdAt: DateTime.now().subtract(const Duration(days: 2)),
   ),
   // 4. Praga - Viaggio passato
@@ -47,7 +47,7 @@ final List<Trip> sampleTrips = [
     price: '280€',
     departureDate: DateTime.now().subtract(const Duration(days: 10)),
     returnDate: DateTime.now().subtract(const Duration(days: 5)),
-    type: TripType.cittaCultura,
+    type: TripType.cityAndCulture,
     createdAt: DateTime.now().subtract(const Duration(days: 20)),
   ),
   // 5. Dublino - Oltre i 16 giorni del meteo

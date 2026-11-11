@@ -1,22 +1,22 @@
 enum TripType {
-  zainoInSpalla,
-  mareRelax,
-  cittaCultura,
+  backpacking,
+  seaAndRelax,
+  cityAndCulture,
   onTheRoad,
-  naturaAvventura;
+  natureAndAdventure;
 
   // Helper per l'etichetta da mostrare a schermo
   String get label {
     switch (this) {
-      case TripType.zainoInSpalla:
+      case TripType.backpacking:
         return 'Zaino in spalla';
-      case TripType.mareRelax:
+      case TripType.seaAndRelax:
         return 'Mare e relax';
-      case TripType.cittaCultura:
+      case TripType.cityAndCulture:
         return 'Città e cultura';
       case TripType.onTheRoad:
         return 'On the road';
-      case TripType.naturaAvventura:
+      case TripType.natureAndAdventure:
         return 'Natura e avventura';
     }
   }
