@@ -5,7 +5,7 @@ class Trip {
   final String title;
   final String city;
   final String description;
-  final String price;
+  final double price;
   final DateTime departureDate;
   final DateTime returnDate;
   final TripType type;
