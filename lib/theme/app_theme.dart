@@ -36,6 +36,17 @@ class AppTheme {
           textStyle: AppTextStyles.label,
         ),
       ),
+      inputDecorationTheme: InputDecorationThemeData(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: p.border),
+          borderRadius: BorderRadius.circular(AppSizes.searchRadius),
+        ),
+        hintStyle: AppTextStyles.body.copyWith(
+          color: p.textSecondary,
+        ),
+        filled: true,
+        fillColor: p.surface,
+      ),
     );
   }
 
