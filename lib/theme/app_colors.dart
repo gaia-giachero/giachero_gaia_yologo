@@ -15,6 +15,8 @@ class AppPalette {
   final Color warning;
   final Color error;
   final Color info;
+  final Color surfaceContainerHighest;
+  final Color onSurfaceVariant;
 
   const AppPalette({
     required this.primary,
@@ -31,6 +33,8 @@ class AppPalette {
     required this.warning,
     required this.error,
     required this.info,
+    required this.surfaceContainerHighest,
+    required this.onSurfaceVariant,
   });
 }
 
@@ -51,6 +55,8 @@ class AppColors {
     warning: Color(0xFFB77919),
     error: Color(0xFFD04450),
     info: Color(0xFF2863C7),
+    surfaceContainerHighest: Color(0xFFA2A2A2),
+    onSurfaceVariant: Color(0xFF787878),
   );
 
   // palette dark
@@ -69,6 +75,8 @@ class AppColors {
     warning: Color(0xFFF2C16D),
     error: Color(0xFFF08089),
     info: Color(0xFF83B5FF),
+    surfaceContainerHighest: Color(0xFF787878),
+    onSurfaceVariant: Color(0xFFA2A2A2),
   );
 
   static AppPalette of(BuildContext context) =>
