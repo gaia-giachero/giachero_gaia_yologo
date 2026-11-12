@@ -7,6 +7,8 @@ import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
 import '../models/trip.dart';
 import './trip_image.dart';
 
+import '../edit_icons.dart';
+
 enum TripCardVariant { horizontal, vertical }
 
 class TripCard extends StatelessWidget {
@@ -29,21 +31,33 @@ class TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(AppSizes.cardPadding),
-              child: _buildImageSection(context),
-            ),
-            Padding(
-              padding: EdgeInsets.all(AppSizes.cardPadding),
-              child: _buildInfoSection(context),
-            ),
-          ],
+    return SizedBox(
+      width: variant == TripCardVariant.horizontal
+          ? AppSizes.cardImageWidthHorizontal + AppSizes.cardPadding * 2
+          : null,
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: AppColors.of(context).border,
+            width: 1.5, 
+          ),
+          borderRadius: BorderRadius.circular(AppSizes.cardRadius),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(AppSizes.cardPadding),
+                child: _buildImageSection(context),
+              ),
+              Padding(
+                padding: EdgeInsets.all(AppSizes.cardPadding),
+                child: _buildInfoSection(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -54,27 +68,35 @@ class TripCard extends StatelessWidget {
     return Stack(
       children: [
         SizedBox(
-          height: 8,
+          width: variant == TripCardVariant.horizontal
+              ? AppSizes.cardImageWidthHorizontal
+              : double.infinity,
+          height: variant == TripCardVariant.horizontal
+              ? AppSizes.cardImageHeightHorizontal
+              : AppSizes.cardImageHeightVertical,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.imageRadius),
             child: TripImage(imageUrl: trip.imageUrl),
           ),
         ),
-        Positioned(
-          top: 8,
-          right: 8,
-          child: IconButton(
-            onPressed: () {},
-            icon: onEditTap != null
-                ? Icon(Icons.edit_square, color: AppColors.of(context).accent)
-                : (onFavoriteTap != null
-                      ? Icon(
-                          Icons.favorite,
-                          color: AppColors.of(context).accent,
-                        )
-                      : Icon(Icons.favorite_border)),
+        if (onEditTap != null || onFavoriteTap != null)
+          Positioned(
+            top: 10,
+            right: 10,
+            child: IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.of(context).onSurfaceVariant
+                    .withValues(alpha: 0.2),
+              ),
+              onPressed: onEditTap ?? onFavoriteTap,
+              icon: onEditTap != null
+                  ? Icon(EditIcons.editOutlined, color: AppColors.of(context).accent)
+                  : Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? AppColors.of(context).accent : null,
+                    ),
+            ),
           ),
-        ),
       ],
     );
   }
@@ -87,17 +109,19 @@ class TripCard extends StatelessWidget {
         Text(trip.title, maxLines: 1, overflow: TextOverflow.ellipsis),
         Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormatter.formatRange(
-                    trip.departureDate,
-                    trip.returnDate,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    DateFormatter.formatRange(
+                      trip.departureDate,
+                      trip.returnDate,
+                    ),
                   ),
-                ),
-                Text(trip.city),
-              ],
+                  Text(trip.city),
+                ],
+              ),
             ),
             Text(
               PriceFormatter.formatta(trip.price),
