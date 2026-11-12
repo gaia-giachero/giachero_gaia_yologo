@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
+import 'package:giachero_gaia_yologo/utils/app_strings.dart';
+import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
+import 'package:giachero_gaia_yologo/widget/status_message.dart';
+import 'package:giachero_gaia_yologo/widget/trip_image.dart';
 
 import '../utils/date_formatter.dart';
 
@@ -33,7 +37,9 @@ class WidgetTestScreen extends StatelessWidget {
                 'Data nulla (fallback): ${DateFormatter.formatta(null)}',
                 style: TextStyle(color: AppColors.of(context).primary),
               ),
+              SizedBox(height: 5),
               Divider(),
+              SizedBox(height: 5),
               Text(
                 "PROVA PRICE FORMATTER",
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -46,6 +52,72 @@ class WidgetTestScreen extends StatelessWidget {
                 'Prezzo nullo (fallback): ${PriceFormatter.formatta(null)}',
                 style: TextStyle(color: AppColors.of(context).primary),
               ),
+              SizedBox(height: 5),
+              Divider(),
+              SizedBox(height: 5),
+              StatusMessage(
+                message: AppStrings.addError,
+                textButton: AppStrings.errorButton,
+                onPressed: () {},
+                buttonColor: AppColors.of(context).error,
+              ),
+              SizedBox(height: 5),
+              Divider(),
+              SizedBox(height: 5),
+              StatusMessage(message: AppStrings.addError),
+              SizedBox(height: 5),
+              Divider(),
+              SizedBox(height: 5),
+              StatusMessage(
+                message: AppStrings.addError,
+                textButton: AppStrings.errorButton,
+                onPressed: null,
+                buttonColor: AppColors.of(context).disabled,
+              ),
+              SizedBox(height: 5),
+              Divider(),
+              SizedBox(height: 5),
+              SizedBox(
+                width: 320,
+                height: 200,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSizes.imageRadius),
+                  child: TripImage(
+                    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuUYitDsMSaKcmH445tll7s9tVuKJSp9wThA43Wr_mIvhaJG-_Lkh9DHE&s=10',
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 60,
+                width: 60,
+                child: ClipOval(
+                  child: TripImage(
+                    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuUYitDsMSaKcmH445tll7s9tVuKJSp9wThA43Wr_mIvhaJG-_Lkh9DHE&s=10',
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                width: 320,
+                height: 200,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSizes.imageRadius),
+                  child: TripImage(
+                    imageUrl: 'https://ted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuUYitDsMSaKcmH445tll7s9tVuKJSp9wThA43Wr_mIvhaJG-_Lkh9DHE&s=10',
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                width: 320,
+                height: 200,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSizes.imageRadius),
+                  child: TripImage(),
+                ),
+              ),
+              SizedBox(height: 20,)
             ],
           ),
         ),
