@@ -1,12 +1,25 @@
 class AppSizes {
   static const double padding = 24;
 
-  static const double imageHeight = 200;
-  static const double imageWidth = 250;
+  // CARD 
+  static const double cardImageHeightHorizontal = 200;
+  static const double cardImageWidthHorizontal = 250;
+  static const double cardImageHeightVertical = 200;
+  static const double cardImageWidthVertical = 320;
+  
   static const double imageRadius = 5;
+  
   static const double cardRadius = 15;
   static const double cardPadding = 16;
 
+  // POPULAR DESTINATION
+  static const double destinationCircleSize = 72;
+
+  // SEARCH 
+  static const double searchRadius = 10;
+  static const double filterIcons = 24;
+
+  // NAVIGATION
   static const double navHeight = 63;
   static const double navRadius = 30;
   static const double iconSize = 30;

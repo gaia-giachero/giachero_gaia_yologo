@@ -15,6 +15,7 @@ class AppStrings {
   static const String tripError = 'Errore durante il caricamento dei dati. Riprova.';
 
   // Explore 
+  static const String hintText = 'Cerca la tua prossima destinazione';
   static const String searchError = 'Qualcosa è andato storto durante la ricerca. Riprova.';
   static const String searchNoResults = 'Nessun risultato per questa ricerca. \nProva con un\'altra destinazione o modifica i filtri.';
 
