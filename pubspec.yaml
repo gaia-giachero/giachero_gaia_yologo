@@ -73,6 +73,9 @@ flutter:
       fonts:
         - asset: assets/fonts/Atma-Bold.ttf
           weight: 700 
+    - family: EditIcons
+      fonts:
+        - asset: assets/icons/EditIcons.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
