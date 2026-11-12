@@ -1,8 +1,11 @@
 class AppSizes {
   static const double padding = 24;
-  static const double radius = 12;
 
+  static const double imageHeight = 200;
+  static const double imageWidth = 250;
   static const double imageRadius = 5;
+  static const double cardRadius = 15;
+  static const double cardPadding = 16;
 
   static const double navHeight = 63;
   static const double navRadius = 30;
