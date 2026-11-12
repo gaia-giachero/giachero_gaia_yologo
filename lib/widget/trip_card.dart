@@ -8,7 +8,7 @@ import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
 import '../models/trip.dart';
 import './trip_image.dart';
 
-import '../edit_icons.dart';
+import '../my_custom_icons.dart';
 
 enum TripCardVariant { horizontal, vertical }
 
@@ -94,7 +94,7 @@ class TripCard extends StatelessWidget {
               onPressed: onEditTap ?? onFavoriteTap,
               icon: onEditTap != null
                   ? Icon(
-                      EditIcons.editOutlined,
+                      MyCustomIcons.editOutlined,
                       color: AppColors.of(context).accent,
                     )
                   : Icon(
