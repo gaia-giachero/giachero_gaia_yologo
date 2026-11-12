@@ -11,6 +11,7 @@ class Trip {
   final TripType type;
   final String? ownerId;
   final DateTime createdAt;
+  final String? imageUrl;
 
   const Trip({
     required this.id,
@@ -23,5 +24,6 @@ class Trip {
     required this.type,
     this.ownerId,
     required this.createdAt,
+    this.imageUrl,
   });
 }
