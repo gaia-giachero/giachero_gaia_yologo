@@ -3,7 +3,10 @@ import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/utils/app_strings.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
+import 'package:giachero_gaia_yologo/widget/popular_destination_item.dart';
+import 'package:giachero_gaia_yologo/widget/search_filter_bar.dart';
 import 'package:giachero_gaia_yologo/widget/status_message.dart';
+import 'package:giachero_gaia_yologo/widget/trip_card.dart';
 import 'package:giachero_gaia_yologo/widget/trip_image.dart';
 
 import '../utils/date_formatter.dart';
@@ -117,7 +120,35 @@ class WidgetTestScreen extends StatelessWidget {
                   child: TripImage(),
                 ),
               ),
-              SizedBox(height: 20,)
+              SizedBox(height: 20),
+              TripCard(trip: sampleTrips[0]),
+              SizedBox(height: 5),
+              TripCard(
+                trip: sampleTrips[0],
+                isFavorite: true,
+                onFavoriteTap: () {},
+              ),
+              SizedBox(height: 5),
+              TripCard(
+                trip: sampleTrips[1],
+                isFavorite: false,
+                onFavoriteTap: () {},
+              ),
+              SizedBox(height: 5),
+              TripCard(trip: sampleTrips[2], onEditTap: () {}),
+              SizedBox(height: 5),
+              TripCard(
+                trip: sampleTrips[0],
+                variant: TripCardVariant.horizontal,
+                onFavoriteTap: () {},
+              ),
+              SizedBox(height: 20),
+              PopularDestinationItem(
+                city: 'Barcellona',
+                imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuUYitDsMSaKcmH445tll7s9tVuKJSp9wThA43Wr_mIvhaJG-_Lkh9DHE&s=10',
+              ),
+              SizedBox(height: 20,),
+              SearchFilterBar(),
             ],
           ),
         ),
