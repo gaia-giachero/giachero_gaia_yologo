@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
+import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/widget/trip_image.dart';
 
@@ -18,6 +19,7 @@ class PopularDestinationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -33,7 +35,9 @@ class PopularDestinationItem extends StatelessWidget {
             city,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: AppColors.of(context).textPrimary),
+            style: AppTextStyles.cardTitle.copyWith(
+              color: AppColors.of(context).textPrimary,
+            ),
           ),
         ],
       ),

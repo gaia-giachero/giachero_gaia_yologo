@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
+import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
@@ -38,10 +39,7 @@ class TripCard extends StatelessWidget {
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: AppColors.of(context).border,
-            width: 1.5, 
-          ),
+          side: BorderSide(color: AppColors.of(context).border, width: 1.5),
           borderRadius: BorderRadius.circular(AppSizes.cardRadius),
         ),
         child: InkWell(
@@ -53,7 +51,12 @@ class TripCard extends StatelessWidget {
                 child: _buildImageSection(context),
               ),
               Padding(
-                padding: EdgeInsets.all(AppSizes.cardPadding),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSizes.cardPadding,
+                  0,
+                  AppSizes.cardPadding,
+                  AppSizes.cardPadding,
+                ),
                 child: _buildInfoSection(context),
               ),
             ],
@@ -90,7 +93,10 @@ class TripCard extends StatelessWidget {
               ),
               onPressed: onEditTap ?? onFavoriteTap,
               icon: onEditTap != null
-                  ? Icon(EditIcons.editOutlined, color: AppColors.of(context).accent)
+                  ? Icon(
+                      EditIcons.editOutlined,
+                      color: AppColors.of(context).accent,
+                    )
                   : Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite ? AppColors.of(context).accent : null,
@@ -106,7 +112,15 @@ class TripCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(trip.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+        Text(
+          trip.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.cardTitle.copyWith(
+            color: AppColors.of(context).textPrimary,
+          ),
+        ),
+        SizedBox(height: 4),
         Row(
           children: [
             Expanded(
@@ -118,14 +132,24 @@ class TripCard extends StatelessWidget {
                       trip.departureDate,
                       trip.returnDate,
                     ),
+                    style: AppTextStyles.label.copyWith(
+                      color: AppColors.of(context).textSecondary,
+                    ),
                   ),
-                  Text(trip.city),
+                  Text(
+                    trip.city,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.of(context).textSecondary,
+                    ),
+                  ),
                 ],
               ),
             ),
             Text(
               PriceFormatter.formatta(trip.price),
-              style: TextStyle(color: AppColors.of(context).accent),
+              style: AppTextStyles.h2.copyWith(
+                color: AppColors.of(context).accent,
+              ),
             ),
           ],
         ),
