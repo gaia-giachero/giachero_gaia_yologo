@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/models/trip_type.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/utils/app_strings.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
-import 'package:giachero_gaia_yologo/widget/popular_destination_item.dart';
-import 'package:giachero_gaia_yologo/widget/search_filter_bar.dart';
-import 'package:giachero_gaia_yologo/widget/status_message.dart';
-import 'package:giachero_gaia_yologo/widget/trip_card.dart';
-import 'package:giachero_gaia_yologo/widget/trip_image.dart';
+import 'package:giachero_gaia_yologo/widgets/app_text_field.dart';
+import 'package:giachero_gaia_yologo/widgets/popular_destination_item.dart';
+import 'package:giachero_gaia_yologo/widgets/search_filter_bar.dart';
+import 'package:giachero_gaia_yologo/widgets/status_message.dart';
+import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
+import 'package:giachero_gaia_yologo/widgets/trip_image.dart';
+import 'package:giachero_gaia_yologo/widgets/trip_type_chip.dart';
 
 import '../utils/date_formatter.dart';
 
@@ -147,8 +150,44 @@ class WidgetTestScreen extends StatelessWidget {
                 city: 'Barcellona',
                 imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuUYitDsMSaKcmH445tll7s9tVuKJSp9wThA43Wr_mIvhaJG-_Lkh9DHE&s=10',
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               SearchFilterBar(),
+              SizedBox(height: 20),
+              Wrap(
+                spacing: 5,
+                runSpacing: 5,
+                children: [
+                  TripTypeChip(
+                    type: TripType.backpacking,
+                    isSelected: false,
+                    onTap: (value) => false,
+                  ),
+                  TripTypeChip(
+                    type: TripType.cityAndCulture,
+                    isSelected: true,
+                    onTap: (value) => true,
+                  ),
+                  TripTypeChip(
+                    type: TripType.natureAndAdventure,
+                    isSelected: false,
+                    onTap: (value) => false,
+                  ),
+                  TripTypeChip(
+                    type: TripType.seaAndRelax,
+                    isSelected: false,
+                    onTap: (value) => false,
+                  ),
+                  TripTypeChip(
+                    type: TripType.onTheRoad,
+                    isSelected: false,
+                    onTap: (value) => false,
+                  ),
+                  SizedBox(height: 20,),
+                  AppTextField(labelText: 'Email', hintText: 'Inserisci l\'email',),
+                  AppTextField(labelText: 'Password', isPassword: true, hintText: 'Inserisci la password',),
+                  AppTextField(labelText: 'Destinazione', isRequired: true, hintText: 'Inserisci la destinazione',)
+                ],
+              ),
             ],
           ),
         ),
