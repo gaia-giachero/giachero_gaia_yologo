@@ -41,11 +41,25 @@ class AppTheme {
           borderSide: BorderSide(color: p.border),
           borderRadius: BorderRadius.circular(AppSizes.searchRadius),
         ),
-        hintStyle: AppTextStyles.body.copyWith(
-          color: p.textSecondary,
-        ),
+        hintStyle: AppTextStyles.body.copyWith(color: p.textSecondary),
         filled: true,
         fillColor: p.surface,
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: p.disabled,
+        selectedColor: p.primary,
+        disabledColor: p.disabled,
+        labelStyle: AppTextStyles.caption.copyWith(color: p.surface),
+        labelPadding: EdgeInsets.symmetric(
+          vertical: AppSizes.labelPaddingVertical,
+          horizontal: AppSizes.labelPaddingHorizontal,
+        ),
+        secondaryLabelStyle: AppTextStyles.caption.copyWith(color: p.surface),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(AppSizes.labelRadius),
+          
+        ),
+        showCheckmark: false,
       ),
     );
   }
