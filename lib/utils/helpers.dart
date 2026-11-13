@@ -19,6 +19,11 @@ class AppSizes {
   static const double searchRadius = 10;
   static const double filterIcons = 24;
 
+  // CHIP TYPE
+  static const double labelPaddingHorizontal = 20;
+  static const double labelPaddingVertical = 5;
+  static const double labelRadius = 20;
+
   // NAVIGATION
   static const double navHeight = 63;
   static const double navRadius = 30;
