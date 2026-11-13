@@ -44,6 +44,8 @@ class AppTheme {
         hintStyle: AppTextStyles.body.copyWith(color: p.textSecondary),
         filled: true,
         fillColor: p.surface,
+        prefixIconColor: p.textSecondary,
+        suffixIconColor: p.textSecondary,
       ),
       chipTheme: ChipThemeData(
         backgroundColor: p.disabled,
@@ -57,7 +59,6 @@ class AppTheme {
         secondaryLabelStyle: AppTextStyles.caption.copyWith(color: p.surface),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(AppSizes.labelRadius),
-          
         ),
         showCheckmark: false,
       ),
