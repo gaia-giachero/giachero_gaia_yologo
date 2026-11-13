@@ -6,7 +6,7 @@ import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
 
 import '../models/trip.dart';
-import './trip_image.dart';
+import 'trip_image.dart';
 
 import '../my_custom_icons.dart';
 

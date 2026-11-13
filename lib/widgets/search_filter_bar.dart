@@ -31,7 +31,7 @@ class SearchFilterBar extends StatelessWidget {
           controller: controller,
           decoration: InputDecoration(hintText: AppStrings.hintText),
         ),
-        SizedBox(height: 15,),
+        const SizedBox(height: 15,),
         Row(
           children: [
             Expanded(
@@ -40,7 +40,7 @@ class SearchFilterBar extends StatelessWidget {
                 child: Text(AppStrings.searchButton),
               ),
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             IconButton(
               onPressed: onFilterTap,
               icon: Icon(

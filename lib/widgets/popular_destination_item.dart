@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
-import 'package:giachero_gaia_yologo/widget/trip_image.dart';
+import 'package:giachero_gaia_yologo/widgets/trip_image.dart';
 
 class PopularDestinationItem extends StatelessWidget {
   final String city;
