@@ -56,4 +56,12 @@ class AppStrings {
 
   // Button Logout 
   static const String logoutButton = 'Logout';
+
+  // Validazioni
+  static const String requiredField = 'Campo obbligatorio';
+  static const String missingCharacter = 'Manca il carattere @';
+  static const String shortPassword = 'Password inserita non valida';
+  static const String invalidPrice = 'Inserisci un prezzo valido';
+  static const String negativePrice = 'Il prezzo non può essere negativo';
+  static const String returnBeforeDeparture = 'La data di ritorno deve essere successiva alla partenza';
 }

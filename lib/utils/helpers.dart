@@ -20,7 +20,7 @@ class AppSizes {
   static const double filterIcons = 24;
 
   // CHIP TYPE
-  static const double labelPaddingHorizontal = 20;
+  static const double labelPaddingHorizontal = 15;
   static const double labelPaddingVertical = 5;
   static const double labelRadius = 20;
 
@@ -31,6 +31,9 @@ class AppSizes {
   static const double iconSizeSelected = 35;
   static const double paddingHorizontal = 30;
   static const double paddingVertical = 20;
+
+  // FIELD LABEL
+  static const double fieldLabelGap = 7;
 }
 
 const int weatherWindowDays = 16;

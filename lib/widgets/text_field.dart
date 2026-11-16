@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 
+import '../utils/helpers.dart';
+
 class AppTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String labelText;
@@ -44,8 +46,9 @@ class _AppTextFieldState extends State<AppTextField> {
             color: AppColors.of(context).textPrimary,
           ),
         ),
-        const SizedBox(height: 7),
+        const SizedBox(height: AppSizes.fieldLabelGap),
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: widget.controller,
           obscureText: _hidden,
           validator: widget.validator,
