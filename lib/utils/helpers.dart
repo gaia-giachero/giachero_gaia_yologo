@@ -34,6 +34,9 @@ class AppSizes {
 
   // FIELD LABEL
   static const double fieldLabelGap = 7;
+
+  // BUTTON
+  static const double widthButton = 135;
 }
 
 const int weatherWindowDays = 16;

@@ -29,7 +29,7 @@ class AppTheme {
       ),
       textTheme: _textTheme(p),
       filledButtonTheme: FilledButtonThemeData(
-        style: ElevatedButton.styleFrom(
+        style: FilledButton.styleFrom(
           backgroundColor: p.primary,
           foregroundColor: p.surface,
           disabledBackgroundColor: p.disabled,
