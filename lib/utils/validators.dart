@@ -16,7 +16,7 @@ class Validators {
     
     return null;
   }
-
+ 
   static String? returnDate(DateTime? departure, DateTime? returnDate) {
     if (departure == null || returnDate == null) return AppStrings.requiredField;
 
@@ -25,19 +25,19 @@ class Validators {
     return null;
   }
 
-  // static String? email(String? value) {
-  //   if (value == null || value.trim().isEmpty) return AppStrings.requiredField;
+  static String? email(String? value) {
+    if (value == null || value.trim().isEmpty) return AppStrings.requiredField;
 
-  //   if (!(value.contains('@'))) return AppStrings.missingCharacter;
+    if (!(value.contains('@'))) return AppStrings.missingCharacter;
 
-  //   return null;
-  // }
+    return null;
+  }
 
-  // static String? password(String? value) {
-  //   if (value == null || value.trim().isEmpty) return AppStrings.requiredField;
+  static String? password(String? value) {
+    if (value == null || value.trim().isEmpty) return AppStrings.requiredField;
 
-  //   if (value.length < 6) return AppStrings.shortPassword;
+    if (value.length < 6) return AppStrings.shortPassword;
 
-  //   return null;
-  // }
+    return null;
+  }
 }
