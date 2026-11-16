@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
+import 'package:giachero_gaia_yologo/widgets/app_button.dart';
 
 class StatusMessage extends StatelessWidget {
   final String message;
   final String? textButton;
   final VoidCallback? onPressed;
-  final Color? buttonColor;
+  final AppButtonVariant buttonVariant;
 
   const StatusMessage({
     required this.message,
     this.textButton,
     this.onPressed,
-    this.buttonColor,
+    this.buttonVariant = AppButtonVariant.red,
     super.key,
   });
 
@@ -30,19 +31,10 @@ class StatusMessage extends StatelessWidget {
         ),
         SizedBox(height: 10),
         if (labelButton != null)
-          FilledButton(
-            onPressed: onPressed,
-            style: FilledButton.styleFrom(
-              minimumSize: const Size(double.infinity, 40),
-              backgroundColor:
-                  buttonColor ?? Theme.of(context).colorScheme.primary,
-            ),
-            child: Text(
-              labelButton,
-              style: AppTextStyles.label.copyWith(
-                color: AppColors.of(context).surface,
-              ),
-            ),
+          AppButton(
+            labelButton: labelButton,
+            onTap: onPressed,
+            variant: buttonVariant,
           ),
       ],
     );
