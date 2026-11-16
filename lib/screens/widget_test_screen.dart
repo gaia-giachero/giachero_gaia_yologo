@@ -4,7 +4,9 @@ import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/utils/app_strings.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/price_formatter.dart';
-import 'package:giachero_gaia_yologo/widgets/app_text_field.dart';
+import 'package:giachero_gaia_yologo/utils/validators.dart';
+import 'package:giachero_gaia_yologo/widgets/app_button.dart';
+import 'package:giachero_gaia_yologo/widgets/text_field.dart';
 import 'package:giachero_gaia_yologo/widgets/popular_destination_item.dart';
 import 'package:giachero_gaia_yologo/widgets/search_filter_bar.dart';
 import 'package:giachero_gaia_yologo/widgets/status_message.dart';
@@ -16,8 +18,26 @@ import '../utils/date_formatter.dart';
 
 import '../data/sample_trips.dart';
 
-class WidgetTestScreen extends StatelessWidget {
+class WidgetTestScreen extends StatefulWidget {
   const WidgetTestScreen({super.key});
+
+  @override
+  State<WidgetTestScreen> createState() => _TestScreenState();
+}
+
+class _TestScreenState extends State<WidgetTestScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  void _invia() {
+    final form = _formKey.currentState;
+    if (form != null && form.validate()) {
+      form.save();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Validazione effettuata con successo!')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +85,16 @@ class WidgetTestScreen extends StatelessWidget {
                 message: AppStrings.addError,
                 textButton: AppStrings.errorButton,
                 onPressed: () {},
-                buttonColor: AppColors.of(context).error,
+                buttonVariant: AppButtonVariant.red,
+              ),
+              SizedBox(height: 5),
+              Divider(),
+              SizedBox(height: 5),
+              StatusMessage(
+                message: AppStrings.addSuccess,
+                textButton: AppStrings.myTripButton,
+                onPressed: () {},
+                buttonVariant: AppButtonVariant.green,
               ),
               SizedBox(height: 5),
               Divider(),
@@ -77,8 +106,7 @@ class WidgetTestScreen extends StatelessWidget {
               StatusMessage(
                 message: AppStrings.addError,
                 textButton: AppStrings.errorButton,
-                onPressed: null,
-                buttonColor: AppColors.of(context).disabled,
+                buttonVariant: AppButtonVariant.red,
               ),
               SizedBox(height: 5),
               Divider(),
@@ -182,12 +210,59 @@ class WidgetTestScreen extends StatelessWidget {
                     isSelected: false,
                     onTap: (value) => false,
                   ),
-                  SizedBox(height: 20,),
-                  AppTextField(labelText: 'Email', hintText: 'Inserisci l\'email',),
-                  AppTextField(labelText: 'Password', isPassword: true, hintText: 'Inserisci la password',),
-                  AppTextField(labelText: 'Destinazione', isRequired: true, hintText: 'Inserisci la destinazione',)
                 ],
               ),
+              SizedBox(height: 20),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    AppTextField(
+                      labelText: 'Email',
+                      hintText: 'Inserisci l\'email',
+                      validator: Validators.email,
+                    ),
+                    AppTextField(
+                      labelText: 'Password',
+                      isPassword: true,
+                      hintText: 'Inserisci la password',
+                      validator: Validators.password,
+                    ),
+                    AppTextField(
+                      labelText: 'Destinazione',
+                      isRequired: true,
+                      hintText: 'Inserisci la destinazione',
+                      validator: Validators.notEmpty,
+                    ),
+                    AppTextField(
+                      labelText: 'Prezzo',
+                      isRequired: true,
+                      hintText: 'Inserisci il prezzo',
+                      validator: Validators.price,
+                    ),
+                    SizedBox(height: 20),
+
+                    AppButton(
+                      variant: AppButtonVariant.primary,
+                      labelButton: AppStrings.loginButton,
+                      onTap: _invia,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              AppButton(labelButton: 'Principale', onTap: () {}),
+              AppButton(
+                labelButton: 'Rosso',
+                variant: AppButtonVariant.red,
+                onTap: () {},
+              ),
+              AppButton(
+                labelButton: 'Verde',
+                variant: AppButtonVariant.green,
+                onTap: () {},
+              ),
+              AppButton(labelButton: 'disattivato', isFullWidth: false,),
             ],
           ),
         ),
