@@ -1,7 +1,14 @@
 class AppStrings {
   // Login
+  static const String hintLabelEmail = 'Email';
+  static const String hintLabelPassword = 'Password';
   static const String loginError = 'Credenziali errate, riprova.';
   static const String forgotPassword = 'Password dimenticata?';
+  static const String forgotPasswordInstrucrion = 'Inserisci la tua email per ricevere le istruzioni';
+  static const String confirmMessage = 'Richiesta inviata. Controlla la tua email';
+  static const String titleLogin = 'Pronto a partire?';
+  static const String intestationLogin = 'Trova il tuo viaggio last minute';
+  static const String emptyField = 'Campi vuoti. Inserisci email e password';
 
   // Navigation
   static const String navHome = 'Home';

@@ -1,6 +1,15 @@
 class AppSizes {
   static const double padding = 24;
 
+  // LOGIN
+  static const double heightBox = 440;
+  static const double widthBox = 333;
+  static const double paddingBox = 20;
+  static const double paddingBottomBox = 40;
+  static const double gapBox = 30;
+  static const double gapTextBox = 20;
+  static const double gapFielBox = 6;
+
   // CARD 
   static const double cardImageHeightHorizontal = 200;
   static const double cardImageWidthHorizontal = 250;
