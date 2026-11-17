@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/models/user.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_theme.dart';
 import 'package:giachero_gaia_yologo/screens/add_trip_screen.dart';
@@ -7,9 +8,11 @@ import 'package:giachero_gaia_yologo/screens/favorites_screen.dart';
 import 'package:giachero_gaia_yologo/screens/home_screen.dart';
 import 'package:giachero_gaia_yologo/screens/profile_screen.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
+// import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainShellScreen extends StatefulWidget {
-  const MainShellScreen({super.key});
+  final User? user;
+  const MainShellScreen({required this.user, super.key});
 
   @override
   State<MainShellScreen> createState() => _MainShellScreenState();
