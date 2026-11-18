@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/services/auth_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
@@ -90,109 +92,237 @@ class _LoginScreenState extends State<LoginScreen> {
     final error = errorMessage;
 
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: AppSizes.widthBox,
-          height: AppSizes.heightBox,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                AppSizes.paddingBox,
-                AppSizes.paddingBox,
-                AppSizes.paddingBox,
-                AppSizes.paddingBottomBox,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppStrings.titleLogin,
-                    style: AppTextStyles.h4.copyWith(
-                      color: AppColors.of(context).textPrimary,
-                    ),
-                  ),
-                  Text(
-                    AppStrings.intestationLogin,
-                    style: AppTextStyles.bodyLarge.copyWith(
-                      color: AppColors.of(context).textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.gapTextBox),
-                  AppTextField(
-                    labelText: AppStrings.hintLabelEmail,
-                    hintText: AppStrings.hintLabelEmail,
-                    controller: emailController,
-                    validator: Validators.email,
-                  ),
-                  const SizedBox(height: AppSizes.gapFielBox),
-                  AppTextField(
-                    labelText: AppStrings.hintLabelPassword,
-                    hintText: AppStrings.hintLabelPassword,
-                    isPassword: true,
-                    controller: passwordController,
-                    validator: Validators.password,
-                  ),
-                  InkWell(
-                    child: Text(
-                      AppStrings.forgotPassword,
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.of(context).primary,
-                      ),
-                    ),
-                    onTap: () {
-                      _mostraBottomSheet(context);
-                    },
-                  ),
-                  const SizedBox(height: AppSizes.gapTextBox),
-                  if (error != null)
-                    Text(
-                      error,
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.of(context).error,
-                      ),
-                    ),
-                  const SizedBox(height: AppSizes.gapTextBox),
-                  AppButton(
-                    labelButton: AppStrings.loginButton,
-                    onTap: _isLoading ? null : _login,
-                  ),
-                ],
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.6,
+              child: Image.asset(
+                'assets/images/background_yologo.webp',
+                fit: BoxFit.cover,
               ),
             ),
           ),
-        ),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.paddingHorizontal,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppStrings.title,
+                            style: AppTextStyles.brandTitle.copyWith(
+                              color: AppColors.of(context).textLogin,
+                            ),
+                          ),
+                          Text(
+                            AppStrings.intestation,
+                            style: AppTextStyles.body.copyWith(
+                              color: AppColors.of(context).textLogin,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSizes.gapTitleCard),
+                      SingleChildScrollView(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusBox,
+                          ),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                            child: Container(
+                              color: AppColors.of(context).background
+                                  .withValues(
+                                    alpha: 0.5,
+                                  ), // fill semitrasparente
+                              child: SizedBox(
+                                width: AppSizes.widthBox,
+                                height: AppSizes.heightBox,
+                                // child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    AppSizes.paddingBox,
+                                    AppSizes.paddingBox,
+                                    AppSizes.paddingBox,
+                                    AppSizes.paddingBottomBox,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppStrings.titleLogin,
+                                        style: AppTextStyles.h4.copyWith(
+                                          color: AppColors.of(context)
+                                              .textPrimary,
+                                        ),
+                                      ),
+                                      Text(
+                                        AppStrings.intestationLogin,
+                                        style: AppTextStyles.bodyLarge.copyWith(
+                                          color: AppColors.of(context)
+                                              .textPrimary,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: AppSizes.gapTextBox,
+                                      ),
+                                      AppTextField(
+                                        labelText: AppStrings.hintLabelEmail,
+                                        hintText: AppStrings.hintLabelEmail,
+                                        controller: emailController,
+                                        validator: Validators.email,
+                                      ),
+                                      const SizedBox(
+                                        height: AppSizes.gapFieldBox,
+                                      ),
+                                      AppTextField(
+                                        labelText: AppStrings.hintLabelPassword,
+                                        hintText: AppStrings.hintLabelPassword,
+                                        isPassword: true,
+                                        controller: passwordController,
+                                        validator: Validators.password,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: InkWell(
+                                          child: Text(
+                                            AppStrings.forgotPassword,
+                                            style: AppTextStyles.body.copyWith(
+                                              color: AppColors.of(context)
+                                                  .primary,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            _mostraBottomSheet(context);
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: AppSizes.gapTextBox,
+                                      ),
+                                      if (error != null)
+                                        Text(
+                                          error,
+                                          style: AppTextStyles.body.copyWith(
+                                            color: AppColors.of(context).error,
+                                          ),
+                                        ),
+                                      const SizedBox(
+                                        height: AppSizes.gapTextBox,
+                                      ),
+                                      AppButton(
+                                        labelButton: AppStrings.loginButton,
+                                        isLoading: _isLoading,
+                                        onTap: _login,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 void _mostraBottomSheet(BuildContext context) {
+  bool sent = false;
+
   showModalBottomSheet(
     context: context,
+    isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    builder: (BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Invia richiesta',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            AppTextField(
-              labelText: AppStrings.hintLabelEmail,
-              hintText: AppStrings.hintLabelEmail,
-            ),
-            const SizedBox(height: 12),
-            AppButton(labelButton: AppStrings.requestButton),
-          ],
-        ),
-      );
-    },
+    builder: (context) => StatefulBuilder(
+      builder: (context, setSheetState) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            AppSizes.horizontalPadding,
+            AppSizes.verticalPadding,
+            AppSizes.horizontalPadding,
+            AppSizes.verticalPadding + MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppStrings.requestButton,
+                      style: AppTextStyles.h3.copyWith(
+                        color: AppColors.of(context).textPrimary,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.cancel_outlined),
+                      color: AppColors.of(context).textPrimary,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSizes.gapSheet),
+              sent == true
+                  ? Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(AppStrings.confirmMessage),
+                        ),
+                        const SizedBox(height: AppSizes.gapSheet),
+                        AppButton(
+                          labelButton: AppStrings.requestSend,
+                          onTap: () => Navigator.pop(context),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: AppTextField(
+                            labelText: AppStrings.hintLabelEmail,
+                            hintText: AppStrings.hintLabelEmail,
+                          ),
+                        ),
+                        const SizedBox(height: AppSizes.gapSheet),
+                        AppButton(
+                          labelButton: AppStrings.requestButton,
+                          onTap: () => setSheetState(() => sent = true),
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+        );
+      },
+    ),
   );
 }
