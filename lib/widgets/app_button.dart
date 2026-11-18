@@ -6,6 +6,7 @@ enum AppButtonVariant { primary, red, green, secondary }
 
 class AppButton extends StatelessWidget {
   final String labelButton;
+  final IconData? icon;
   final VoidCallback? onTap;
   final AppButtonVariant variant;
   final bool isFullWidth;
@@ -13,6 +14,7 @@ class AppButton extends StatelessWidget {
 
   const AppButton({
     required this.labelButton,
+    this.icon,
     this.onTap,
     this.variant = AppButtonVariant.primary,
     this.isFullWidth = true,
@@ -58,7 +60,17 @@ class AppButton extends StatelessWidget {
                   color: AppColors.of(context).textPrimary,
                 ),
               )
-            : Text(labelButton),
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 20),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(labelButton),
+                ],
+              ),
       ),
     );
   }
