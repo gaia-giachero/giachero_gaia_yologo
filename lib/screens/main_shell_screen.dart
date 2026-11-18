@@ -8,10 +8,9 @@ import 'package:giachero_gaia_yologo/screens/favorites_screen.dart';
 import 'package:giachero_gaia_yologo/screens/home_screen.dart';
 import 'package:giachero_gaia_yologo/screens/profile_screen.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainShellScreen extends StatefulWidget {
-  final User? user;
+  final User user;
   const MainShellScreen({required this.user, super.key});
 
   @override
@@ -26,12 +25,12 @@ class _MainShellScreenState extends State<MainShellScreen> {
     return Scaffold(
       body: IndexedStack(
         index: _index,
-        children: const [
-          HomeScreen(),
-          ExploreScreen(),
-          AddTripScreen(),
-          FavoritesScreen(),
-          ProfileScreen(),
+        children: [
+          const HomeScreen(),
+          const ExploreScreen(),
+          const AddTripScreen(),
+          const FavoritesScreen(),
+          ProfileScreen(userProfile: widget.user,),
         ],
       ),
       bottomNavigationBar: Padding(
