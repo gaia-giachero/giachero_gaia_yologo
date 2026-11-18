@@ -26,4 +26,28 @@ class Trip {
     required this.createdAt,
     this.imageUrl,
   });
+
+  factory Trip.fromMap(Map<String, dynamic> map) {
+    final rawType = (map['trip_type'] as String? ?? '').toLowerCase().trim();
+
+    return Trip(
+      id: map['id'].toString(),
+      title: map['title'] as String? ?? 'Senza titolo',
+      city: map['city'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      price: (map['price'] as num?)?.toInt() ?? 0,
+      departureDate: DateTime.parse(map['start_date'] as String),
+      returnDate: DateTime.parse(map['end_date'] as String),
+      type: TripType.values.firstWhere(
+        (e) => e.name.toLowerCase() == rawType,
+        orElse: () =>
+            TripType.values.first, 
+      ),
+      ownerId: map['owner_id'] as String?,
+      createdAt: map['created_at'] != null
+          ? DateTime.parse(map['created_at'] as String).toLocal()
+          : DateTime.now(),
+      imageUrl: map['image_url'] as String?,
+    );
+  }
 }
