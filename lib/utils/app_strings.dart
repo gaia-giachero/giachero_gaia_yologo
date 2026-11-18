@@ -1,4 +1,8 @@
 class AppStrings {
+  // Title + Intestation
+  static const String title = 'YoloGo';
+  static const String intestation = 'You Only Live Once • Si vive una volta sola';
+  
   // Login
   static const String hintLabelEmail = 'Email';
   static const String hintLabelPassword = 'Password';
@@ -16,6 +20,13 @@ class AppStrings {
   static const String navAdd = 'Add';
   static const String navFavorite = 'Favorite';
   static const String navProfile = 'Profile';
+
+  // NameScreen 
+  static const String home = 'Home';
+  static const String explore = 'Esplora';
+  static const String add = 'Add';
+  static const String favorite = 'Preferiti';
+  static const String profile = 'Impostazioni';
 
   // Home
   static const String destinationError = 'Errore durante il caricamento delle destinazioni.';
@@ -43,6 +54,13 @@ class AppStrings {
   // Profile
   static const String profileNoTrip = 'Non hai ancora creato nessun viaggio.';
   static const String profileTripError = 'Non siamo riusciti a caricare i tuoi viaggi. Riprova.';
+  static const String profileMyTrip = 'I Miei Viaggi Pubblicati';
+
+  // Settings 
+  static const String modify = 'Modifica';
+  static const String theme = 'Tema app';
+  static const String themeDark = 'Tema scuro';
+  static const String themeLight = 'Tema chiaro';
 
   // Button
   static const String loginButton = 'Accedi';

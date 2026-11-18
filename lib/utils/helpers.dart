@@ -1,5 +1,7 @@
 class AppSizes {
-  static const double padding = 24;
+  static const double paddingHorizontalPage = 20;
+  static const double paddingTopPage = 20;
+  static const double paddingBottomPage = 0;
 
   // LOGIN
   static const double heightBox = 440;
@@ -8,7 +10,15 @@ class AppSizes {
   static const double paddingBottomBox = 40;
   static const double gapBox = 30;
   static const double gapTextBox = 20;
-  static const double gapFielBox = 6;
+  static const double gapFieldBox = 6;
+  static const double radiusBox = 20;
+
+  static const double gapTitleCard = 70;
+
+  // FORGOT PASSWORD
+  static const double horizontalPadding = 30;
+  static const double verticalPadding = 40;
+  static const double gapSheet = 20;
 
   // CARD 
   static const double cardImageHeightHorizontal = 200;
@@ -46,6 +56,19 @@ class AppSizes {
 
   // BUTTON
   static const double widthButton = 135;
+
+  // PROFILE
+  static const double avatarSize = 100;
+  static const double avatarBorder = 1;
+  static const double gapAvatarName = 10;
+
+  static const double gapProfile = 25;
+  static const double gapText = 20;
+  static const double gapButton = 10;
+
+  // SETTINGS
+  static const double gapBackButton = 5;
+  static const double gapSettings = 20;
 }
 
 const int weatherWindowDays = 16;
