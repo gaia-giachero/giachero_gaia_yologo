@@ -7,6 +7,7 @@ import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/widgets/app_button.dart';
 import 'package:giachero_gaia_yologo/widgets/profile_header.dart';
 import 'package:giachero_gaia_yologo/widgets/text_field.dart';
+import 'package:giachero_gaia_yologo/theme/app_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String nomeUtente;
@@ -21,6 +22,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingsScreen> {
   late TextEditingController _usernameController;
   late TextEditingController _bioController;
+  final ValueNotifier<bool> temaScuro = ValueNotifier(false);
 
   @override
   void initState() {
@@ -111,7 +113,16 @@ class _SettingScreenState extends State<SettingsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(AppStrings.themeDark),
-                    Switch(value: false, onChanged: null),
+                    Switch(
+                      value: themeNotifier.value == ThemeMode.dark,
+                      onChanged: (isDark) {
+                        setState(() {
+                          themeNotifier.value = isDark
+                              ? ThemeMode.dark
+                              : ThemeMode.light;
+                        });
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(height: AppSizes.gapSettings),
