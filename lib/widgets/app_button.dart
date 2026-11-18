@@ -9,12 +9,14 @@ class AppButton extends StatelessWidget {
   final VoidCallback? onTap;
   final AppButtonVariant variant;
   final bool isFullWidth;
+  final bool isLoading;
 
   const AppButton({
     required this.labelButton,
     this.onTap,
     this.variant = AppButtonVariant.primary,
     this.isFullWidth = true,
+    this.isLoading = false,
     super.key,
   });
 
@@ -47,7 +49,16 @@ class AppButton extends StatelessWidget {
           foregroundColor: foreground,
           disabledBackgroundColor: AppColors.of(context).disabled,
         ),
-        child: Text(labelButton),
+        child: isLoading
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: AppColors.of(context).textPrimary,
+                ),
+              )
+            : Text(labelButton),
       ),
     );
   }
