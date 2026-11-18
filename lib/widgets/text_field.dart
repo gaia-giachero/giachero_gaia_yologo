@@ -10,6 +10,9 @@ class AppTextField extends StatefulWidget {
   final String hintText;
   final bool isPassword;
   final bool isRequired;
+  final bool showLabel;
+  final int maxLines;
+  final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
 
   const AppTextField({
@@ -18,6 +21,9 @@ class AppTextField extends StatefulWidget {
     required this.hintText,
     this.isPassword = false,
     this.isRequired = false,
+    this.showLabel = true,
+    this.maxLines = 1,
+    this.onChanged,
     this.validator,
     super.key,
   });
@@ -40,17 +46,21 @@ class _AppTextFieldState extends State<AppTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.isRequired ? '${widget.labelText} *' : widget.labelText,
-          style: AppTextStyles.cardTitle.copyWith(
-            color: AppColors.of(context).textPrimary,
+        if (widget.showLabel) ...[
+          Text(
+            widget.isRequired ? '${widget.labelText} *' : widget.labelText,
+            style: AppTextStyles.cardTitle.copyWith(
+              color: AppColors.of(context).textPrimary,
+            ),
           ),
-        ),
-        const SizedBox(height: AppSizes.fieldLabelGap),
+          const SizedBox(height: AppSizes.fieldLabelGap),
+        ],
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: widget.controller,
           obscureText: _hidden,
+          maxLines: widget.isPassword ? 1 : widget.maxLines,
+          onChanged: widget.onChanged,
           validator: widget.validator,
           decoration: InputDecoration(
             hintText: widget.hintText,
