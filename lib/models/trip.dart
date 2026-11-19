@@ -40,8 +40,7 @@ class Trip {
       returnDate: DateTime.parse(map['end_date'] as String),
       type: TripType.values.firstWhere(
         (e) => e.name.toLowerCase() == rawType,
-        orElse: () =>
-            TripType.values.first, 
+        orElse: () => TripType.values.first,
       ),
       ownerId: map['owner_id'] as String?,
       createdAt: map['created_at'] != null

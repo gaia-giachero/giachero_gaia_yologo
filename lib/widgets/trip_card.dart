@@ -88,8 +88,7 @@ class TripCard extends StatelessWidget {
             right: 10,
             child: IconButton(
               style: IconButton.styleFrom(
-                backgroundColor: AppColors.of(context).onSurfaceVariant
-                    .withValues(alpha: 0.2),
+                backgroundColor: AppColors.of(context).onSurfaceVariant,
               ),
               onPressed: onEditTap ?? onFavoriteTap,
               icon: onEditTap != null
