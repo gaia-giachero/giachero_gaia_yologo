@@ -10,6 +10,7 @@ import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/widgets/app_button.dart';
 import 'package:giachero_gaia_yologo/widgets/profile_header.dart';
 import 'package:giachero_gaia_yologo/widgets/text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   final User user;
@@ -150,6 +151,12 @@ class _SettingScreenState extends State<SettingsScreen> {
                     if (!context.mounted) return;
 
                     if (ok) {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool(
+                        'isDarkMode',
+                        themeNotifier.value == ThemeMode.dark,
+                      );
+
                       final updatedUser = widget.user.copyWith(
                         username: newUsername,
                         bio: newBio.isEmpty ? null : newBio,
