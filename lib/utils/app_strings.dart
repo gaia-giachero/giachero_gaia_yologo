@@ -2,6 +2,8 @@ class AppStrings {
   // Title + Intestation
   static const String title = 'YoloGo';
   static const String intestation = 'You Only Live Once • Si vive una volta sola';
+  static const String titleHome = 'DOVE ANDRAI \nDOMANI?';
+  static const String intestationHome = 'Poco preavviso... tante destinazioni!';
   
   // Login
   static const String hintLabelEmail = 'Email';
@@ -31,6 +33,8 @@ class AppStrings {
   // Home
   static const String destinationError = 'Errore durante il caricamento delle destinazioni.';
   static const String tripError = 'Errore durante il caricamento dei dati. Riprova.';
+  static const String popularDestination = 'Destinazioni popolari';
+  static const String lastTrip = 'Ultimi viaggi last minute';
 
   // Explore 
   static const String hintText = 'Cerca la tua prossima destinazione';
@@ -78,6 +82,7 @@ class AppStrings {
   static const String confirmButton = 'Conferma';
   static const String cancelButton = 'Annulla'; 
   static const String deleteButton = 'Elimina'; 
+  static const String backButton = 'Indietro'; 
 
   // Button Logout 
   static const String logoutButton = 'Logout';

@@ -20,6 +20,13 @@ class AppSizes {
   static const double verticalPadding = 40;
   static const double gapSheet = 20;
 
+  // HOMEPAGE
+  static const double gapTitle = 10;
+  static const double gapSectionHome = 30;
+  static const double gapCard = 20;
+  static const double heightLastTrip = 330;
+  static const double widthCard = 283;
+
   // CARD 
   static const double cardImageHeightHorizontal = 200;
   static const double cardImageWidthHorizontal = 250;
