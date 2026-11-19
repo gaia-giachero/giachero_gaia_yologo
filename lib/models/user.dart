@@ -10,4 +10,13 @@ class User {
     required this.username,
     this.bio,
   });
+
+  User copyWith({String? username, String? bio}) {
+    return User(
+      id: id,
+      email: email,
+      username: username ?? this.username,
+      bio: bio ?? this.bio,
+    );
+  }
 }
