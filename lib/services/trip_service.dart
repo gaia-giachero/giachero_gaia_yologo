@@ -13,4 +13,16 @@ class TripService {
 
     return rows.map(Trip.fromMap).toList();
   }
+
+  static Future<List<Trip>> fetchSystemTrips() async {
+    final client = Supabase.instance.client;
+
+    final rows = await client
+      .from('trips')
+      .select()
+      .isFilter('owner_id', null)
+      .order('created_at', ascending: false);
+
+      return rows.map(Trip.fromMap).toList();
+  }
 }
