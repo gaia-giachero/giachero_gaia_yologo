@@ -1,5 +1,6 @@
 import 'package:giachero_gaia_yologo/models/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
+
 /* hide User -> used to hide the User class (the User class exists in the Supabase database); 
     in this file, the User class is mine alone. */
 
@@ -58,5 +59,21 @@ class AuthService {
 
   static Future<void> signOut() async {
     await Supabase.instance.client.auth.signOut();
+  }
+
+  static Future<bool> updateProfile(
+    String userId,
+    String username,
+    String? bio,
+  ) async {
+    try {
+      await Supabase.instance.client
+          .from('profiles')
+          .update({'username': username, 'bio': bio})
+          .eq('id', userId);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }
