@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/user.dart';
 import 'package:giachero_gaia_yologo/screens/settings_screen.dart';
+import 'package:giachero_gaia_yologo/services/trip_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 import 'package:giachero_gaia_yologo/utils/app_strings.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/widgets/app_button.dart';
 import 'package:giachero_gaia_yologo/widgets/profile_header.dart';
-import 'package:giachero_gaia_yologo/services/trip_service.dart';
-import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/widgets/status_message.dart';
 import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
@@ -21,23 +21,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late User _currentUser;
   late Future<List<Trip>> _tripsFuture;
 
   void _loadTrips() {
     setState(() {
-      _tripsFuture = TripService.fetchTripsByOwner(widget.userProfile.id);
+      _tripsFuture = TripService.fetchTripsByOwner(_currentUser.id);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _tripsFuture = TripService.fetchTripsByOwner(widget.userProfile.id);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    _currentUser = widget.userProfile;
+    _tripsFuture = TripService.fetchTripsByOwner(_currentUser.id);
   }
 
   Widget _buildTrips() {
@@ -80,8 +77,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final usernameUser = widget.userProfile.username;
-    final bioUser = widget.userProfile.bio;
+    final usernameUser = _currentUser.username;
+    final bioUser = _currentUser.bio;
 
     return Scaffold(
       body: SafeArea(
@@ -94,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: ListView(
             children: [
-              ProfileHeader(username: widget.userProfile.username),
+              ProfileHeader(username: usernameUser),
               const SizedBox(height: AppSizes.gapText),
               if (bioUser != null)
                 Text(
@@ -106,15 +103,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: AppSizes.gapText),
               AppButton(
                 labelButton: AppStrings.settingsProfile,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsScreen(
-                      nomeUtente: usernameUser,
-                      bioUtente: bioUser,
+                onTap: () async {
+                  final updatedUser = await Navigator.push<User>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsScreen(
+                        user: _currentUser,
+                      ),
                     ),
-                  ),
-                ),
+                  );
+
+                  if (updatedUser != null) {
+                    setState(() {
+                      _currentUser = updatedUser;
+                    });
+                  }
+                },
               ),
               const SizedBox(height: AppSizes.gapProfile),
               Text(
