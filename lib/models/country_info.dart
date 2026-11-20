@@ -12,9 +12,14 @@ class CountryInfo {
   });
 
   factory CountryInfo.fromJson(Map<String, dynamic> json) {
-    // 1. COUNTRY
+    // 1. COUNTRY (preferisce il nome in italiano se presente, altrimenti inglese)
+    final translations = json['translations'] as Map<String, dynamic>?;
+    final itaTranslation = translations?['ita'] as Map<String, dynamic>?;
     final nameMap = json['name'] as Map<String, dynamic>?;
-    final countryName = nameMap?['common'] as String? ?? 'Sconosciuto';
+    final countryName =
+        (itaTranslation?['common'] as String?) ??
+        (nameMap?['common'] as String?) ??
+        'Sconosciuto';
 
     // 2. FLAG PNG (or SVG)
     final flagsMap = json['flags'] as Map<String, dynamic>?;
@@ -24,10 +29,14 @@ class CountryInfo {
     final currenciesMap = json['currencies'] as Map<String, dynamic>?;
     String currencyText = 'Non disponibile';
     if (currenciesMap != null && currenciesMap.isNotEmpty) {
-      final firstCurrency = currenciesMap.values.first as Map<String, dynamic>;
-      final currName = firstCurrency['name'] as String? ?? '';
-      final currSymbol = firstCurrency['symbol'] as String? ?? '';
-      currencyText = currSymbol.isNotEmpty ? '$currName ($currSymbol)' : currName;
+      final firstCurrency = currenciesMap.values.first as Map<String, dynamic>?;
+      final currName = firstCurrency?['name'] as String? ?? '';
+      final currSymbol = firstCurrency?['symbol'] as String? ?? '';
+      if (currName.isNotEmpty) {
+        currencyText = currSymbol.isNotEmpty
+            ? '$currName ($currSymbol)'
+            : currName;
+      }
     }
 
     // 4. LANGUAGE
