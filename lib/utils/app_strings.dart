@@ -46,6 +46,9 @@ class AppStrings {
   static const String infoError = 'Errore durante il caricamento delle informazioni.';
   static const String weatherError = 'Errore durante il caricamento delle previsioni meteo.';
   static const String weatherNotFound = 'Previsioni meteo non ancora disponibili.'; 
+  static const String description = 'Descrizione viaggio'; 
+  static const String infoDetails = 'Informazioni'; 
+  static const String weatherDetails = 'Meteo'; 
       
   // Add trip
   static const String addSuccess = 'Viaggio creato con successo!';

@@ -27,6 +27,15 @@ class AppSizes {
   static const double heightLastTrip = 330;
   static const double widthCard = 283;
 
+  // DETAILS
+  static const double imageRadiusDetail = 20;
+  static const double gapDetails = 35;
+  static const double gapDetailsText = 5;
+  static const double heightImgDetails = 208;
+  static const double widthImgDetails = 353;
+  static const double gapDatePrice = 20;
+  static const double gapDetailsDescription = 10;
+
   // CARD 
   static const double cardImageHeightHorizontal = 200;
   static const double cardImageWidthHorizontal = 250;
