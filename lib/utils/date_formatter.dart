@@ -13,4 +13,12 @@ class DateFormatter {
     final end = formatter.format(endDate);
     return '$start - $end';
   }
+  
+  static String formatRangeDetails(DateTime? startDate, DateTime? endDate) {
+    if (startDate == null || endDate == null) return '-';
+    final formatter = DateFormat('dd/MM');
+    final start = formatter.format(startDate);
+    final end = formatter.format(endDate);
+    return '$start - $end';
+  }
 }
