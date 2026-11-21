@@ -94,6 +94,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: AppSizes.gapSectionHome),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.of(context).border,
+                  borderRadius: BorderRadius.circular(AppSizes.radiusSection),
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.paddingHorizontalSection,
+                  vertical: AppSizes.paddingVerticalSection,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppStrings.popularDestination,
+                      style: AppTextStyles.h4.copyWith(
+                        color: AppColors.of(context).textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.gapSectionHome,),
+                    
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSizes.gapSectionHome),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
