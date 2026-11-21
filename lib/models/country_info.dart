@@ -12,45 +12,44 @@ class CountryInfo {
   });
 
   factory CountryInfo.fromJson(Map<String, dynamic> json) {
-    // 1. COUNTRY (preferisce il nome in italiano se presente, altrimenti inglese)
-    final translations = json['translations'] as Map<String, dynamic>?;
-    final itaTranslation = translations?['ita'] as Map<String, dynamic>?;
-    final nameMap = json['name'] as Map<String, dynamic>?;
+    // 1. Nome paese (italiano se presente, altrimenti comune)
+    final names = json['names'] as Map<String, dynamic>?;
+    final translations = names?['translations'] as Map<String, dynamic>?;
+    final ita = translations?['ita'] as Map<String, dynamic>?;
     final countryName =
-        (itaTranslation?['common'] as String?) ??
-        (nameMap?['common'] as String?) ??
+        (ita?['common'] as String?) ??
+        (names?['common'] as String?) ??
         'Sconosciuto';
 
-    // 2. FLAG PNG (or SVG)
-    final flagsMap = json['flags'] as Map<String, dynamic>?;
-    final flag = flagsMap?['png'] as String? ?? '';
+    // 2. Bandiera
+    final flagMap = json['flag'] as Map<String, dynamic>?;
+    final flag = flagMap?['url_png'] as String? ?? '';
 
-    // 3. CURRENCY
-    final currenciesMap = json['currencies'] as Map<String, dynamic>?;
-    String currencyText = 'Non disponibile';
-    if (currenciesMap != null && currenciesMap.isNotEmpty) {
-      final firstCurrency = currenciesMap.values.first as Map<String, dynamic>?;
-      final currName = firstCurrency?['name'] as String? ?? '';
-      final currSymbol = firstCurrency?['symbol'] as String? ?? '';
-      if (currName.isNotEmpty) {
-        currencyText = currSymbol.isNotEmpty
-            ? '$currName ($currSymbol)'
-            : currName;
-      }
-    }
-
-    // 4. LANGUAGE
-    final languagesMap = json['languages'] as Map<String, dynamic>?;
-    String languageText = 'Non disponibile';
-    if (languagesMap != null && languagesMap.isNotEmpty) {
-      languageText = languagesMap.values.first.toString();
-    }
-
+    // 3. Valuta e lingua
     return CountryInfo(
       name: countryName,
       flagUrl: flag,
-      currency: currencyText,
-      language: languageText,
+      currency: _firstName(json['currencies']) ?? 'Non disponibile',
+      language: _firstName(json['languages']) ?? 'Non disponibile',
     );
+  }
+
+  // Legge il primo elemento di una lista o mappa e ne estrae un nome leggibile.
+  static String? _firstName(dynamic value) {
+    dynamic first;
+    if (value is List && value.isNotEmpty) {
+      first = value.first;
+    } else if (value is Map && value.isNotEmpty) {
+      first = value.values.first;
+    }
+
+    if (first is String) return first;
+    if (first is Map<String, dynamic>) {
+      for (final key in ['name', 'common', 'english_name']) {
+        final text = first[key];
+        if (text is String && text.isNotEmpty) return text;
+      }
+    }
+    return null;
   }
 }
