@@ -4,7 +4,7 @@ class Trip {
   final String id;
   final String title;
   final String city;
-  final String description;
+  final String descriptionTitle;
   final int price;
   final DateTime departureDate;
   final DateTime returnDate;
@@ -17,7 +17,7 @@ class Trip {
     required this.id,
     required this.title,
     required this.city,
-    required this.description,
+    required this.descriptionTitle,
     required this.price,
     required this.departureDate,
     required this.returnDate,
@@ -34,7 +34,7 @@ class Trip {
       id: map['id'].toString(),
       title: map['title'] as String? ?? 'Senza titolo',
       city: map['city'] as String? ?? '',
-      description: map['description'] as String? ?? '',
+      descriptionTitle: map['description'] as String? ?? '',
       price: (map['price'] as num?)?.toInt() ?? 0,
       departureDate: DateTime.parse(map['start_date'] as String),
       returnDate: DateTime.parse(map['end_date'] as String),
