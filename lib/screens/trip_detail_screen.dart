@@ -14,12 +14,16 @@ import 'package:giachero_gaia_yologo/widgets/status_message.dart';
 class TripDetailScreen extends StatefulWidget {
   final Trip trip;
   final bool isFavorite;
-  final VoidCallback onToggleFavorite;
+  final VoidCallback? onToggleFavorite;
+  final bool isOwner;
+  final VoidCallback? onEditTap;
 
   const TripDetailScreen({
     required this.trip,
-    required this.isFavorite,
-    required this.onToggleFavorite,
+    this.isFavorite = false,
+    this.onToggleFavorite,
+    this.isOwner = false,
+    this.onEditTap,
     super.key,
   });
 
@@ -59,10 +63,10 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   Widget build(BuildContext context) {
     final country = _countryInfo;
     final weather = _weather;
-    
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.of(context).background,
         elevation: 0,
         leadingWidth: 40 + AppSizes.paddingHorizontalPage,
         leading: Padding(
@@ -76,18 +80,25 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           right: AppSizes.paddingHorizontalPage,
         ),
         actions: [
-          IconButton(
-            icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_outline),
-            color: _isFavorite
-                ? AppColors.of(context).accent
-                : AppColors.of(context).textSecondary,
-            onPressed: () {
-              widget.onToggleFavorite();
-              setState(() {
-                _isFavorite = !_isFavorite;
-              });
-            },
-          ),
+          if (widget.isOwner)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              color: AppColors.of(context).textPrimary,
+              onPressed: widget.onEditTap,
+            )
+          else if (widget.onToggleFavorite != null)
+            IconButton(
+              icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_outline),
+              color: _isFavorite
+                  ? AppColors.of(context).accent
+                  : AppColors.of(context).textSecondary,
+              onPressed: () {
+                widget.onToggleFavorite?.call();
+                setState(() {
+                  _isFavorite = !_isFavorite;
+                });
+              },
+            ),
         ],
         titleSpacing: 0,
         title: Text(AppStrings.backButton),
@@ -97,7 +108,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           AppSizes.paddingHorizontalPage,
           AppSizes.paddingTopPage,
           AppSizes.paddingHorizontalPage,
-          AppSizes.paddingBottomPage,
+          AppSizes.paddingBottomPageDetails,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,9 +146,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                     color: AppColors.of(context).textSecondary,
                   ),
                 ),
-                if (_countryInfo != null)
+                if (country != null)
                   Text(
-                    ', ${_countryInfo?.name}',
+                    ', ${country.name}',
                     style: AppTextStyles.h2.copyWith(
                       color: AppColors.of(context).textSecondary,
                     ),
@@ -155,7 +166,16 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.of(context).border,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(AppSizes.sectionRadius),
+                    color: AppColors.of(context).surfaceVariant,
+                  ),
+                  padding: EdgeInsets.all(AppSizes.paddingSection),
                   child: Text(
                     DateFormatter.formatRangeDetails(
                       widget.trip.departureDate,
@@ -166,8 +186,17 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: AppSizes.gapDatePrice),
-                Expanded(
+                const SizedBox(width: AppSizes.gapDatePrice),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.of(context).border,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(AppSizes.sectionRadius),
+                    color: AppColors.of(context).surfaceVariant,
+                  ),
+                  padding: EdgeInsets.all(AppSizes.paddingSection),
                   child: Text(
                     '${widget.trip.price} €',
                     style: AppTextStyles.h2.copyWith(
@@ -178,7 +207,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               ],
             ),
             const SizedBox(height: AppSizes.gapDetails),
-            if (widget.trip.description.isNotEmpty)
+            if (widget.trip.descriptionTitle.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -190,7 +219,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   ),
                   const SizedBox(height: AppSizes.gapDetailsDescription),
                   Text(
-                    widget.trip.description,
+                    widget.trip.descriptionTitle,
                     style: AppTextStyles.bodyLarge.copyWith(
                       color: AppColors.of(context).textSecondary,
                     ),
@@ -204,11 +233,105 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 color: AppColors.of(context).textPrimary,
               ),
             ),
-            if (_isLoadingExtras = true)
-              Center(child: CircularProgressIndicator()),
-            _countryInfo != null
-                ? Text('Info paese')
-                : StatusMessage(message: AppStrings.infoError),
+            const SizedBox(height: AppSizes.gapDetailsDescription),
+            if (_isLoadingExtras)
+              const Center(child: CircularProgressIndicator())
+            else if (country != null)
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.of(context).border,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(AppSizes.sectionRadius),
+                  color: AppColors.of(context).surface,
+                ),
+                padding: EdgeInsets.all(AppSizes.paddingSection),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        country.flagUrl.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.flagRadius,
+                                ),
+                                child: Image.network(
+                                  country.flagUrl,
+                                  width: AppSizes.flagWidth,
+                                  height: AppSizes.flagHeight,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(
+                                        Icons.flag_outlined,
+                                        color: AppColors.of(context).primary,
+                                      ),
+                                ),
+                              )
+                            : Icon(
+                                Icons.flag_outlined,
+                                color: AppColors.of(context).primary,
+                              ),
+                        const SizedBox(height: AppSizes.gapDetailsText),
+                        Text(
+                          country.name,
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.location_city_rounded,
+                          color: AppColors.of(context).primary,
+                        ),
+                        const SizedBox(height: AppSizes.gapDetailsText),
+                        Text(
+                          widget.trip.city,
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.currency_exchange,
+                          color: AppColors.of(context).primary,
+                        ),
+                        const SizedBox(height: AppSizes.gapDetailsText),
+                        Text(
+                          country.currency,
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.language,
+                          color: AppColors.of(context).primary,
+                        ),
+                        const SizedBox(height: AppSizes.gapDetailsText),
+                        Text(
+                          country.language,
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            else
+              StatusMessage(message: AppStrings.infoError),
             const SizedBox(height: AppSizes.gapDetails),
             Text(
               AppStrings.weatherDetails,
@@ -216,11 +339,46 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 color: AppColors.of(context).textPrimary,
               ),
             ),
-            if (_isLoadingExtras = true)
-              Center(child: CircularProgressIndicator()),
-            _weather != null
-                ? Text('Meteo')
-                : StatusMessage(message: AppStrings.weatherError),
+            const SizedBox(height: AppSizes.gapDetailsDescription),
+            if (_isLoadingExtras)
+              const Center(child: CircularProgressIndicator())
+            else if (weather != null)
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.of(context).border,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(AppSizes.sectionRadius),
+                  color: AppColors.of(context).surface,
+                ),
+                padding: EdgeInsets.all(AppSizes.paddingSection),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(weather.icon, color: AppColors.of(context).primary),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${weather.temperature.round()} °C',
+                          style: AppTextStyles.h4.copyWith(
+                            color: AppColors.of(context).textPrimary,
+                          ),
+                        ),
+                        Text(
+                          weather.description,
+                          style: AppTextStyles.body.copyWith(
+                            color: AppColors.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            else
+              StatusMessage(message: AppStrings.weatherError),
           ],
         ),
       ),
