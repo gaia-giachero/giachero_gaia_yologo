@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/user.dart';
 import 'package:giachero_gaia_yologo/screens/settings_screen.dart';
+import 'package:giachero_gaia_yologo/screens/trip_detail_screen.dart';
 import 'package:giachero_gaia_yologo/services/trip_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
@@ -66,7 +67,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Column(
           children: [
             for (final trip in trips) ...[
-              TripCard(trip: trip, onEditTap: () {}),
+              TripCard(
+                trip: trip,
+                onEditTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TripDetailScreen(
+                      trip: trip,
+                      isOwner: true,
+                      onEditTap: () {},
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: AppSizes.gapText),
             ],
           ],
@@ -107,9 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   final updatedUser = await Navigator.push<User>(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SettingsScreen(
-                        user: _currentUser,
-                      ),
+                      builder: (context) => SettingsScreen(user: _currentUser),
                     ),
                   );
 
