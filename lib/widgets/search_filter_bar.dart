@@ -29,9 +29,11 @@ class SearchFilterBar extends StatelessWidget {
             color: AppColors.of(context).textPrimary,
           ),
           controller: controller,
-          decoration: InputDecoration(hintText: AppStrings.hintText),
+          decoration: InputDecoration(
+            hintText: AppStrings.hintText,
+          ),
         ),
-        const SizedBox(height: 15,),
+        const SizedBox(height: 15),
         Row(
           children: [
             Expanded(
@@ -40,7 +42,7 @@ class SearchFilterBar extends StatelessWidget {
                 child: Text(AppStrings.searchButton),
               ),
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(width: 10),
             IconButton(
               onPressed: onFilterTap,
               icon: Icon(
