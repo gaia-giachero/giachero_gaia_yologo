@@ -2,6 +2,7 @@ class AppSizes {
   static const double paddingHorizontalPage = 20;
   static const double paddingTopPage = 20;
   static const double paddingBottomPage = 0;
+  static const double paddingBottomPageDetails = 30;
 
   // LOGIN
   static const double heightBox = 440;
@@ -35,6 +36,11 @@ class AppSizes {
   static const double widthImgDetails = 353;
   static const double gapDatePrice = 20;
   static const double gapDetailsDescription = 10;
+  static const double paddingSection = 20;
+  static const double sectionRadius = 10;
+  static const double flagWidth = 20;
+  static const double flagHeight = 20;
+  static const double flagRadius = 20;
 
   // CARD 
   static const double cardImageHeightHorizontal = 200;
