@@ -46,6 +46,15 @@ class AppTheme {
         fillColor: p.surface,
         prefixIconColor: p.textSecondary,
         suffixIconColor: p.textSecondary,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.searchRadius),
+          borderSide: BorderSide(color: p.border, width: 1),
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.searchRadius),
+          borderSide: BorderSide(color: p.primary, width: 1),
+        ),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: p.disabled,
