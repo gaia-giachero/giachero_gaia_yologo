@@ -27,6 +27,12 @@ class AppSizes {
   static const double gapCard = 20;
   static const double heightLastTrip = 330;
   static const double widthCard = 283;
+  static const double radiusSection = 20;
+  static const double paddingHorizontalSection = 15;
+  static const double paddingVerticalSection = 20;
+
+  // POPULAR DESTINATION
+  static const double destinationCircleSize = 72;
 
   // DETAILS
   static const double imageRadiusDetail = 20;
@@ -53,12 +59,11 @@ class AppSizes {
   static const double cardRadius = 15;
   static const double cardPadding = 16;
 
-  // POPULAR DESTINATION
-  static const double destinationCircleSize = 72;
-
   // SEARCH 
   static const double searchRadius = 10;
   static const double filterIcons = 24;
+  static const double generalPadding = 25;
+  static const double paddingText = 20;
 
   // CHIP TYPE
   static const double labelPaddingHorizontal = 15;

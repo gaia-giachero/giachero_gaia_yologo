@@ -37,7 +37,8 @@ class AppStrings {
   static const String lastTrip = 'Ultimi viaggi last minute';
 
   // Explore 
-  static const String hintText = 'Cerca la tua prossima destinazione';
+  static const String titleExplore = 'Pronto ad esplorare nuove destinazioni?';
+  static const String hintText = 'Cerca per destinazione o titolo';
   static const String searchError = 'Qualcosa è andato storto durante la ricerca. Riprova.';
   static const String searchNoResults = 'Nessun risultato per questa ricerca. \nProva con un\'altra destinazione o modifica i filtri.';
 
