@@ -1,5 +1,5 @@
 import 'package:giachero_gaia_yologo/models/trip.dart';
-import 'package:giachero_gaia_yologo/models/trip_type.dart';
+import 'package:giachero_gaia_yologo/models/trip_filters.dart';
 import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,7 +30,8 @@ class TripService {
 
   static Future<List<Trip>> searchTrips({
     required String text,
-    required Set<TripType> types,
+    required TripFilters filters,
+    required String excludeOwnerId,
   }) async {
     final client = Supabase.instance.client;
 
@@ -39,16 +40,28 @@ class TripService {
         .select()
         .gte('start_date', DateFormatter.formatForDatabase(DateTime.now()));
 
+    query = query.or('owner_id.is.null,owner_id.neq.$excludeOwnerId');
+
     final cleanText = text.replaceAll(RegExp(r'[,()%*]'), ' ').trim();
     if (cleanText.isNotEmpty) {
       query = query.or('city.ilike.*$cleanText*,title.ilike.*$cleanText*');
     }
 
-    if (types.isNotEmpty) {
+    if (filters.types.isNotEmpty) {
       query = query.inFilter(
         'trip_type',
-        types.map((type) => type.name).toList(),
+        filters.types.map((type) => type.name).toList(),
       );
+    }
+
+    final minPrice = filters.minPrice;
+    if (minPrice != null) {
+      query = query.gte('price', minPrice);
+    }
+
+    final maxPrice = filters.maxPrice;
+    if (maxPrice != null) {
+      query = query.lte('price', maxPrice);
     }
 
     final rows = await query.order('created_at', ascending: false);

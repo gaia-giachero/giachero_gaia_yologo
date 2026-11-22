@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/models/trip.dart';
-import 'package:giachero_gaia_yologo/models/trip_type.dart';
+import 'package:giachero_gaia_yologo/models/trip_filters.dart';
+import 'package:giachero_gaia_yologo/widgets/filter_sheet.dart';
 import 'package:giachero_gaia_yologo/screens/trip_detail_screen.dart';
 import 'package:giachero_gaia_yologo/services/trip_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
@@ -12,8 +13,8 @@ import 'package:giachero_gaia_yologo/widgets/status_message.dart';
 import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
 class ExploreScreen extends StatefulWidget {
-  final TextEditingController? controller;
-  const ExploreScreen({this.controller, super.key});
+  final String userId;
+  const ExploreScreen({required this.userId, super.key});
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
@@ -21,13 +22,29 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   final TextEditingController _controller = TextEditingController();
-  final Set<TripType> _selectedTypes = {};
+  TripFilters _filters = const TripFilters();
   late Future<List<Trip>> _searchFuture;
+
+  Future<void> _openFilters() async {
+    final result = await showModalBottomSheet<TripFilters>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => FilterSheet(initialFilters: _filters),
+    );
+
+    if (!mounted || result == null) return;
+
+    setState(() {
+      _filters = result;
+      _searchFuture = _search();
+    });
+  }
 
   Future<List<Trip>> _search() {
     return TripService.searchTrips(
       text: _controller.text.trim(),
-      types: _selectedTypes,
+      filters: _filters,
+      excludeOwnerId: widget.userId,
     );
   }
 
@@ -61,9 +78,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
         final trips = snapshot.data;
         if (snapshot.hasError || trips == null) {
           return StatusMessage(
-              message: AppStrings.searchError,
-              textButton: AppStrings.errorButton,
-              onPressed: _onSearch,
+            message: AppStrings.searchError,
+            textButton: AppStrings.errorButton,
+            onPressed: _onSearch,
           );
         }
 
@@ -73,7 +90,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
         return Column(
           children: [
-            
             for (final trip in trips) ...[
               TripCard(
                 trip: trip,
@@ -117,7 +133,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 ),
               ),
               const SizedBox(height: AppSizes.paddingText),
-              SearchFilterBar(controller: _controller, onSearchTap: _onSearch),
+              SearchFilterBar(
+                controller: _controller,
+                onSearchTap: _onSearch,
+                onFilterTap: _openFilters,
+                hasActiveFilters: _filters.isActive,
+              ),
               const SizedBox(height: AppSizes.paddingText),
               _buildTrips(),
             ],

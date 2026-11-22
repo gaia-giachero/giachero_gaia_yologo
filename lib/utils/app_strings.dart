@@ -50,6 +50,9 @@ class AppStrings {
   static const String description = 'Descrizione viaggio'; 
   static const String infoDetails = 'Informazioni'; 
   static const String weatherDetails = 'Meteo'; 
+
+  // Filter
+  static const String maxLessThanMin = 'Il massimo non può essere minore del minimo';
       
   // Add trip
   static const String addSuccess = 'Viaggio creato con successo!';

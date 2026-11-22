@@ -27,7 +27,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
         index: _index,
         children: [
           const HomeScreen(),
-          const ExploreScreen(),
+          ExploreScreen(userId: widget.user.id),
           const AddTripScreen(),
           const FavoritesScreen(),
           ProfileScreen(userProfile: widget.user,),
