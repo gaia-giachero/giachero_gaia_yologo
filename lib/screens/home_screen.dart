@@ -9,7 +9,14 @@ import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Set<String> favoriteIds;
+  final void Function(Trip) onToggleFavorite;
+
+  const HomeScreen({
+    required this.favoriteIds,
+    required this.onToggleFavorite,
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Trip> _trips = [];
-  final Set<String> _favoriteIds = {};
   bool _isLoading = true;
 
   @override
@@ -38,16 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = false;
       });
     }
-  }
-
-  void _toggleFavorite(String tripId) {
-    setState(() {
-      if (_favoriteIds.contains(tripId)) {
-        _favoriteIds.remove(tripId);
-      } else {
-        _favoriteIds.add(tripId);
-      }
-    });
   }
 
   List<Trip> get _upcomingTrips {
@@ -113,8 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppColors.of(context).textPrimary,
                       ),
                     ),
-                    const SizedBox(height: AppSizes.gapSectionHome,),
-                    
+                    const SizedBox(height: AppSizes.gapSectionHome),
                   ],
                 ),
               ),
@@ -147,18 +142,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: AppSizes.widthCard,
                                 child: TripCard(
                                   trip: trip,
-                                  isFavorite: _favoriteIds.contains(trip.id),
-                                  onFavoriteTap: () => _toggleFavorite(trip.id),
+                                  isFavorite: widget.favoriteIds.contains(
+                                    trip.id,
+                                  ),
+                                  onFavoriteTap: () =>
+                                      widget.onToggleFavorite(trip),
                                   onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => TripDetailScreen(
                                         trip: trip,
-                                        isFavorite: _favoriteIds.contains(
+                                        isFavorite: widget.favoriteIds.contains(
                                           trip.id,
                                         ),
                                         onToggleFavorite: () =>
-                                            _toggleFavorite(trip.id),
+                                            widget.onToggleFavorite(trip),
                                       ),
                                     ),
                                   ),

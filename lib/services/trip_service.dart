@@ -61,4 +61,15 @@ class TripService {
 
     return rows.map(Trip.fromMap).toList();
   }
+
+  static const int maxPopularDestination = 6;
+  static Future<List<String>> fetchPopularDestinations() async {
+    final response = await Supabase.instance.client
+      .from('popular_destinations')
+      .select('city')
+      .limit(maxPopularDestination);
+
+    return (response as List)
+      .map((row) => row['city'] as String).toList();
+  }
 }
