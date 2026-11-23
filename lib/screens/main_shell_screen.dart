@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/user.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_theme.dart';
@@ -19,6 +20,20 @@ class MainShellScreen extends StatefulWidget {
 
 class _MainShellScreenState extends State<MainShellScreen> {
   int _index = 0;
+  final Map<String, Trip> _favorites = {};
+
+  void _toggleFavorite(Trip trip) {
+    setState(() {
+      if (_favorites.containsKey(trip.id)) {
+        _favorites.remove(trip.id);
+      } else {
+        _favorites[trip.id] = trip;
+      }
+    });
+  }
+
+  Set<String> get _favoriteIds => _favorites.keys.toSet();
+  List<Trip> get _favoriteTrips => _favorites.values.toList();
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +41,22 @@ class _MainShellScreenState extends State<MainShellScreen> {
       body: IndexedStack(
         index: _index,
         children: [
-          const HomeScreen(),
-          ExploreScreen(userId: widget.user.id),
+          HomeScreen(
+            favoriteIds: _favoriteIds,
+            onToggleFavorite: _toggleFavorite,
+          ),
+          ExploreScreen(
+            userId: widget.user.id,
+            favoriteIds: _favoriteIds,
+            onToggleFavorite: _toggleFavorite,
+          ),
           const AddTripScreen(),
-          const FavoritesScreen(),
-          ProfileScreen(userProfile: widget.user,),
+          FavoritesScreen(
+            favorites: _favoriteTrips,
+            onToggleFavorites: _toggleFavorite,
+            onExploreTap: () => setState(() => _index = 1),
+          ),
+          ProfileScreen(userProfile: widget.user),
         ],
       ),
       bottomNavigationBar: Padding(
