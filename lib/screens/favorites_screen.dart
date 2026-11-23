@@ -1,12 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/models/trip.dart';
+import 'package:giachero_gaia_yologo/screens/explore_screen.dart';
+import 'package:giachero_gaia_yologo/screens/trip_detail_screen.dart';
+import 'package:giachero_gaia_yologo/theme/app_colors.dart';
+import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
+import 'package:giachero_gaia_yologo/utils/app_strings.dart';
+import 'package:giachero_gaia_yologo/utils/helpers.dart';
+import 'package:giachero_gaia_yologo/widgets/app_button.dart';
+import 'package:giachero_gaia_yologo/widgets/status_message.dart';
+import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
 class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
+  final List<Trip> favorites;
+  final VoidCallback onExploreTap;
+  final void Function(Trip) onToggleFavorites;
+
+  const FavoritesScreen({
+    required this.favorites,
+    required this.onExploreTap,
+    required this.onToggleFavorites,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Favorites'),),
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            AppSizes.paddingHorizontalPage,
+            AppSizes.paddingTopPage,
+            AppSizes.paddingHorizontalPage,
+            AppSizes.paddingBottomPage,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppStrings.myFavorites,
+                style: AppTextStyles.h1.copyWith(
+                  color: AppColors.of(context).textPrimary,
+                ),
+              ),
+              const SizedBox(height: AppSizes.generalGapFav),
+              if (favorites.isEmpty)
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        StatusMessage(message: AppStrings.favoriteNoFav),
+                        AppButton(
+                          labelButton: AppStrings.exploreAddTrip,
+                          onTap: onExploreTap,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              if (favorites.isNotEmpty)
+                Expanded(
+                  child: ListView(
+                    children: [
+                      for (final trip in favorites)
+                        TripCard(
+                          trip: trip,
+                          isFavorite: true,
+                          onFavoriteTap: () => onToggleFavorites(trip),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TripDetailScreen(
+                                trip: trip,
+                                isFavorite: true,
+                                onToggleFavorite: () => onToggleFavorites(trip),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
