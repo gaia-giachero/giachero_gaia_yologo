@@ -5,11 +5,22 @@ import 'package:giachero_gaia_yologo/models/trip_type.dart';
 import 'package:http/http.dart' as http;
 
 class UnsplashService {
+  static final Map<String, String> _cache = {};
+
   static Future<String?> fetchDestinationImage(
     String city,
     TripType type,
   ) async {
+    final normalizedCity = city.trim().toLowerCase();
+    if (normalizedCity.isEmpty) return null;
+
+    final cacheKey = '${normalizedCity}_${type?.name ?? 'any'}';
+    final cachedUrl = _cache[cacheKey];
+    if (cachedUrl != null) return cachedUrl;
+    
     try {
+      final query = type != null ? '$city ${type.searchKeywords}' : city;
+
       final uri = Uri.https('api.unsplash.com', '/search/photos', {
         'query': '$city ${type.searchKeywords}',
         'per_page': '1',
@@ -32,6 +43,12 @@ class UnsplashService {
 
       final firstPhoto = results.first as Map<String, dynamic>;
       final urls = firstPhoto['urls'] as Map<String, dynamic>?;
+      final imageUrl = urls?['regular'] as String?;
+
+      if (imageUrl != null && imageUrl.isNotEmpty) {
+        _cache[cacheKey] = imageUrl;
+      }
+
       return urls?['regular'] as String?;
     } catch (_) {
       return null;
