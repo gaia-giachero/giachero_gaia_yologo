@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/trip_filters.dart';
-import 'package:giachero_gaia_yologo/widgets/filter_sheet.dart';
+import 'package:giachero_gaia_yologo/models/trip_type.dart';
+import 'package:giachero_gaia_yologo/widgets/filter_panel.dart';
 import 'package:giachero_gaia_yologo/screens/trip_detail_screen.dart';
 import 'package:giachero_gaia_yologo/services/trip_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
@@ -14,29 +15,43 @@ import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
 class ExploreScreen extends StatefulWidget {
   final String userId;
-  const ExploreScreen({required this.userId, super.key});
+  final Set<String> favoriteIds;
+  final void Function(Trip) onToggleFavorite;
+
+  const ExploreScreen({
+    required this.userId,
+    required this.favoriteIds,
+    required this.onToggleFavorite,
+    super.key,
+  });
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
+  static const double _priceMin = 0;
+  static const double _priceMax = 1000;
+
   final TextEditingController _controller = TextEditingController();
-  TripFilters _filters = const TripFilters();
   late Future<List<Trip>> _searchFuture;
 
-  Future<void> _openFilters() async {
-    final result = await showModalBottomSheet<TripFilters>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => FilterSheet(initialFilters: _filters),
-    );
+  bool _showFilters = false;
+  TripType? _selectedType;
+  double _maxPrice = _priceMax;
 
-    if (!mounted || result == null) return;
+  TripFilters get _filters => TripFilters(
+    type: _selectedType,
+    maxPrice: _maxPrice < _priceMax ? _maxPrice.round() : null,
+  );
 
+  void _toggleFilters() {
+    setState(() => _showFilters = !_showFilters);
+  }
+
+  void _selectType(TripType type) {
     setState(() {
-      _filters = result;
-      _searchFuture = _search();
+      _selectedType = _selectedType == type ? null : type;
     });
   }
 
@@ -93,14 +108,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
             for (final trip in trips) ...[
               TripCard(
                 trip: trip,
-                onFavoriteTap: () {},
+                isFavorite: widget.favoriteIds.contains(trip.id),
+                onFavoriteTap: () => widget.onToggleFavorite(trip),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => TripDetailScreen(
                       trip: trip,
                       isOwner: false,
-                      onToggleFavorite: () {},
+                      isFavorite: widget.favoriteIds.contains(trip.id),
+                      onToggleFavorite: () => widget.onToggleFavorite(trip),
                     ),
                   ),
                 ),
@@ -136,9 +153,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
               SearchFilterBar(
                 controller: _controller,
                 onSearchTap: _onSearch,
-                onFilterTap: _openFilters,
+                onFilterTap: _toggleFilters,
                 hasActiveFilters: _filters.isActive,
               ),
+              if (_showFilters) ...[
+                const SizedBox(height: AppSizes.paddingText),
+                FilterPanel(
+                  minPrice: _priceMin,
+                  maxPrice: _priceMax,
+                  value: _maxPrice,
+                  onValueChanged: (value) => setState(() => _maxPrice = value),
+                  selectedType: _selectedType,
+                  onTypeSelected: _selectType,
+                ),
+              ],
               const SizedBox(height: AppSizes.paddingText),
               _buildTrips(),
             ],
