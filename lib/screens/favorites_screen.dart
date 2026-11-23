@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/models/trip.dart';
-import 'package:giachero_gaia_yologo/screens/explore_screen.dart';
 import 'package:giachero_gaia_yologo/screens/trip_detail_screen.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
