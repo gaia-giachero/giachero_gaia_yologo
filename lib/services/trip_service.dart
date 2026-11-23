@@ -47,16 +47,9 @@ class TripService {
       query = query.or('city.ilike.*$cleanText*,title.ilike.*$cleanText*');
     }
 
-    if (filters.types.isNotEmpty) {
-      query = query.inFilter(
-        'trip_type',
-        filters.types.map((type) => type.name).toList(),
-      );
-    }
-
-    final minPrice = filters.minPrice;
-    if (minPrice != null) {
-      query = query.gte('price', minPrice);
+    final type = filters.type;
+    if (type != null) {
+      query = query.eq('trip_type', type.name);
     }
 
     final maxPrice = filters.maxPrice;

@@ -1,16 +1,10 @@
 import 'package:giachero_gaia_yologo/models/trip_type.dart';
 
 class TripFilters {
-  final Set<TripType> types;
-  final int? minPrice;
+  final TripType? type;
   final int? maxPrice;
 
-  const TripFilters({
-    this.types = const {},
-    this.minPrice,
-    this.maxPrice,
-  });
+  const TripFilters({this.type, this.maxPrice});
 
-  bool get isActive =>
-      types.isNotEmpty || minPrice != null || maxPrice != null;
+  bool get isActive => type != null || maxPrice != null;
 }
