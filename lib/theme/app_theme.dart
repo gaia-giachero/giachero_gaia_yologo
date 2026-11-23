@@ -71,6 +71,11 @@ class AppTheme {
         ),
         showCheckmark: false,
       ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: p.primary,
+        inactiveTrackColor: p.border,
+        thumbColor: p.primary,
+      ),
     );
   }
 

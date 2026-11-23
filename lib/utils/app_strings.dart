@@ -61,6 +61,7 @@ class AppStrings {
   // Favorite
   static const String favoriteNoFav = 'Non hai ancora salvato nessun viaggio. \nTocca il cuore su un viaggio per aggiungerlo qui.';
   static const String favoriteError = 'Non siamo riusciti a caricare i preferiti. Riprova.';
+  static const String myFavorites = 'I Miei Preferiti';
 
   // Profile
   static const String profileNoTrip = 'Non hai ancora creato nessun viaggio.';

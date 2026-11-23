@@ -33,6 +33,8 @@ class AppSizes {
 
   // POPULAR DESTINATION
   static const double destinationCircleSize = 72;
+  static const double destinationListHeight = 185;
+  static const double gapDestination = 20;
 
   // DETAILS
   static const double imageRadiusDetail = 20;
@@ -70,6 +72,14 @@ class AppSizes {
   static const double labelPaddingVertical = 5;
   static const double labelRadius = 20;
 
+  // FILTERS PANEL
+  static const double filterPanelPaddingHorizontal = 20;
+  static const double filterPanelPaddingVertical = 15;
+  static const double gapPanelPadding = 15;
+  static const double filterChipPadding = 5;
+  static const double priceStep = 50;
+  static const double gapChip = 5;
+
   // NAVIGATION
   static const double navHeight = 63;
   static const double navRadius = 30;
@@ -83,6 +93,9 @@ class AppSizes {
 
   // BUTTON
   static const double widthButton = 135;
+
+  // FAVORITE
+  static const double generalGapFav = 20;
 
   // PROFILE
   static const double avatarSize = 100;
