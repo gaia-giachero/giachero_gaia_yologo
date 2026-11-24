@@ -15,7 +15,12 @@ import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User userProfile;
-  const ProfileScreen({required this.userProfile, super.key});
+  final int refreshRequestId;
+  const ProfileScreen({
+    required this.userProfile,
+    required this.refreshRequestId,
+    super.key,
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -36,6 +41,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _currentUser = widget.userProfile;
     _tripsFuture = TripService.fetchTripsByOwner(_currentUser.id);
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfileScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.refreshRequestId != widget.refreshRequestId) {
+      _loadTrips();
+    }
   }
 
   Widget _buildTrips() {
