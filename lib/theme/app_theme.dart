@@ -76,6 +76,11 @@ class AppTheme {
         inactiveTrackColor: p.border,
         thumbColor: p.primary,
       ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: p.border, 
+        circularTrackColor:
+            p.disabled 
+      ),
     );
   }
 
