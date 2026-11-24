@@ -8,21 +8,21 @@ class UnsplashService {
   static final Map<String, String> _cache = {};
 
   static Future<String?> fetchDestinationImage(
-    String city,
-    TripType type,
-  ) async {
+    String city, [
+    TripType? type,
+  ]) async {
     final normalizedCity = city.trim().toLowerCase();
     if (normalizedCity.isEmpty) return null;
 
     final cacheKey = '${normalizedCity}_${type?.name ?? 'any'}';
     final cachedUrl = _cache[cacheKey];
     if (cachedUrl != null) return cachedUrl;
-    
+
     try {
       final query = type != null ? '$city ${type.searchKeywords}' : city;
 
       final uri = Uri.https('api.unsplash.com', '/search/photos', {
-        'query': '$city ${type.searchKeywords}',
+        'query': query,
         'per_page': '1',
         'orientation': 'landscape',
       });

@@ -12,7 +12,7 @@ class CountryInfo {
   });
 
   factory CountryInfo.fromJson(Map<String, dynamic> json) {
-    // 1. Nome paese (italiano se presente, altrimenti comune)
+    // 1. Country name
     final names = json['names'] as Map<String, dynamic>?;
     final translations = names?['translations'] as Map<String, dynamic>?;
     final ita = translations?['ita'] as Map<String, dynamic>?;
@@ -21,11 +21,15 @@ class CountryInfo {
         (names?['common'] as String?) ??
         'Sconosciuto';
 
-    // 2. Bandiera
+    // 2. Flag
     final flagMap = json['flag'] as Map<String, dynamic>?;
-    final flag = flagMap?['url_png'] as String? ?? '';
+    final rawFlag = flagMap?['url_png'] as String? ?? '';
+    final flag = rawFlag.replaceFirst(
+      'https://flags.restcountries.com/v5/',
+      'https://flagcdn.com/',
+    );
 
-    // 3. Valuta e lingua
+    // 3. Currencies and Language
     return CountryInfo(
       name: countryName,
       flagUrl: flag,
@@ -34,7 +38,6 @@ class CountryInfo {
     );
   }
 
-  // Legge il primo elemento di una lista o mappa e ne estrae un nome leggibile.
   static String? _firstName(dynamic value) {
     dynamic first;
     if (value is List && value.isNotEmpty) {

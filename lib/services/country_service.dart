@@ -7,12 +7,18 @@ import 'package:http/http.dart' as http;
 
 class CountryService {
   static const Duration _timeout = Duration(seconds: 10);
+  static final Map<String, CountryInfo?> _cache = {};
 
   static Future<CountryInfo?> getCountryInfoForCity(String city) async {
-    try {
-      final cleanCity = city.split(',').first.trim();
-      if (cleanCity.isEmpty) return null;
+    final cleanCity = city.split(',').first.trim();
+    if (cleanCity.isEmpty) return null;
 
+    final cacheKey = cleanCity.toLowerCase();
+    if (_cache.containsKey(cacheKey)) {
+      return _cache[cacheKey];
+    }
+
+    try {
       final geoUri = Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
         'name': cleanCity,
         'count': '1',
@@ -29,6 +35,7 @@ class CountryService {
       final geoResults = geoData['results'] as List<dynamic>?;
       if (geoResults == null || geoResults.isEmpty) {
         debugPrint('Geocoding: nessun risultato per "$cleanCity"');
+        _cache[cacheKey] = null;
         return null;
       }
 
@@ -36,6 +43,7 @@ class CountryService {
       final countryCode = first['country_code'] as String?;
       if (countryCode == null || countryCode.isEmpty) {
         debugPrint('Geocoding: country_code mancante per "$cleanCity"');
+        _cache[cacheKey] = null;
         return null;
       }
 
@@ -69,11 +77,14 @@ class CountryService {
       final objects = data?['objects'] as List<dynamic>?;
       if (objects == null || objects.isEmpty) {
         debugPrint('REST Countries: nessun paese per "$countryCode"');
+        _cache[cacheKey] = null;
         return null;
       }
 
       final countryMap = objects.first as Map<String, dynamic>;
-      return CountryInfo.fromJson(countryMap);
+      final info = CountryInfo.fromJson(countryMap);
+      _cache[cacheKey] = info;
+      return info;
     } catch (e, stack) {
       debugPrint('Errore CountryService per "$city": $e\n$stack');
       return null;
