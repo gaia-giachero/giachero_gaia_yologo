@@ -34,20 +34,22 @@ class TripDetailScreen extends StatefulWidget {
 class _TripDetailScreenState extends State<TripDetailScreen> {
   late bool _isFavorite;
   CountryInfo? _countryInfo;
-  Weather? _weather;
+  WeatherResult? _weatherResult;
   bool _isLoadingExtras = true;
 
   Future<void> _loadDetails() async {
     final resultCountry = await CountryService.getCountryInfoForCity(
       widget.trip.city,
     );
-    final resultWeather = await WeatherService.getWeatherForCity(
-      widget.trip.city,
+    final resultWeather = await WeatherService.getWeatherForTrip(
+      city: widget.trip.city,
+      departureDate: widget.trip.departureDate,
+      returnDate: widget.trip.returnDate,
     );
     if (!mounted) return;
     setState(() {
       _countryInfo = resultCountry;
-      _weather = resultWeather;
+      _weatherResult = resultWeather;
       _isLoadingExtras = false;
     });
   }
@@ -62,7 +64,13 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final country = _countryInfo;
-    final weather = _weather;
+    final weatherResult = _weatherResult;
+    final firstDayWeather =
+        weatherResult != null &&
+            weatherResult.status == WeatherStatus.available &&
+            weatherResult.forecasts.isNotEmpty
+        ? weatherResult.forecasts.first
+        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -342,7 +350,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             const SizedBox(height: AppSizes.gapDetailsDescription),
             if (_isLoadingExtras)
               const Center(child: CircularProgressIndicator())
-            else if (weather != null)
+            else if (firstDayWeather != null)
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -356,18 +364,21 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(weather.icon, color: AppColors.of(context).primary),
+                    Icon(
+                      firstDayWeather.icon,
+                      color: AppColors.of(context).primary,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '${weather.temperature.round()} °C',
+                          '${firstDayWeather.minTemp.round()}° / ${firstDayWeather.maxTemp.round()} °C',
                           style: AppTextStyles.h4.copyWith(
                             color: AppColors.of(context).textPrimary,
                           ),
                         ),
                         Text(
-                          weather.description,
+                          firstDayWeather.description,
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.of(context).textSecondary,
                           ),
@@ -378,7 +389,10 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 ),
               )
             else
-              StatusMessage(message: AppStrings.weatherError),
+              StatusMessage(
+                message:
+                    weatherResult?.statusMessage ?? AppStrings.weatherError,
+              ),
           ],
         ),
       ),
