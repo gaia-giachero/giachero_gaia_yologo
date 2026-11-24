@@ -96,12 +96,16 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Opacity(
-              opacity: 0.6,
-              child: Image.asset(
-                'assets/images/background_yologo.webp',
-                fit: BoxFit.cover,
-              ),
+            child: Image.asset(
+              'assets/images/background_yologo.webp',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black.withValues(
+                alpha: 0.4,
+              ), 
             ),
           ),
           SafeArea(
