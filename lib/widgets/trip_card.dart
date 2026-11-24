@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:giachero_gaia_yologo/models/country_info.dart';
+import 'package:giachero_gaia_yologo/services/country_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
@@ -135,11 +137,26 @@ class TripCard extends StatelessWidget {
                       color: AppColors.of(context).textSecondary,
                     ),
                   ),
-                  Text(
-                    trip.city,
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.of(context).textSecondary,
-                    ),
+                  FutureBuilder<CountryInfo?>(
+                    future: CountryService.getCountryInfoForCity(trip.city),
+                    builder: (context, snapshot) {
+                      final country = snapshot.data?.name;
+                      final locationText =
+                          (country != null &&
+                              country.isNotEmpty &&
+                              country != 'Sconosciuto')
+                          ? '${trip.city}, $country'
+                          : trip.city;
+
+                      return Text(
+                        locationText,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.of(context).textSecondary,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
