@@ -25,4 +25,9 @@ class DateFormatter {
     final end = formatter.format(endDate);
     return '$start - $end';
   }
+
+  static String formatDayMonth(DateTime? date) {
+    if (date == null) return '-';
+    return DateFormat('dd/MM').format(date);
+  }
 }

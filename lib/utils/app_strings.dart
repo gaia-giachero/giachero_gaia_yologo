@@ -52,12 +52,36 @@ class AppStrings {
   static const String infoDetails = 'Informazioni'; 
   static const String weatherDetails = 'Meteo'; 
 
+  // Weather
+  static const String tooFarInFuture = 'Previsioni disponibili solo entro 16 giorni dalla partenza';
+  static const String pastTrip = 'Viaggio già concluso: previsioni non disponibili';
+  static const String unavailable = 'Previsioni meteo non disponibili al momento';
+
   // Filter
   static const String maxLessThanMin = 'Il massimo non può essere minore del minimo';
       
   // Add trip
   static const String addSuccess = 'Viaggio creato con successo!';
   static const String addError = 'Qualcosa è andato storto.'; 
+  static const String titleAdd = 'Crea viaggio';
+  static const String subtitleAdd = 'Crea la tua prossima proposta last-minute.';
+
+  // Label AddTrip
+  static const String titleTrip = 'Titolo viaggio *';
+  static const String cityTrip = 'Città di destinazione *';
+  static const String departureTrip = 'Partenza *';
+  static const String returnTrip = 'Ritorno *';
+  static const String priceTrip = 'Prezzo (€) *';
+  static const String typeTrip = 'Tipologia *';
+  static const String descriptionTrip = 'Descrizione *';
+
+  // Hint AddTrip
+  static const String hintTitleTrip = 'Titolo del viaggio';
+  static const String hintCityTrip = 'Destinazione';
+  static const String hintDepartureTrip = 'gg/mm/yyyy';
+  static const String hintReturnTrip = 'gg/mm/yyyy';
+  static const String hintPriceTrip = 'xxx';
+  static const String hintDescriptionTrip = 'Descrizione approfondita del viaggio';
 
   // Favorite
   static const String favoriteNoFav = 'Non hai ancora salvato nessun viaggio. \nTocca il cuore su un viaggio per aggiungerlo qui.';

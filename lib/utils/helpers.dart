@@ -91,8 +91,13 @@ class AppSizes {
   // FIELD LABEL
   static const double fieldLabelGap = 7;
 
+  // ADD
+  static const double gapForm = 20;
+
   // BUTTON
   static const double widthButton = 135;
+  static const double paddingHorizontalButton = 40;
+  static const double paddingVerticalButton = 10;
 
   // FAVORITE
   static const double generalGapFav = 20;
