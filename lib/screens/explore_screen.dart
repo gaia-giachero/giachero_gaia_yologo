@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/trip_filters.dart';
 import 'package:giachero_gaia_yologo/models/trip_type.dart';
-import 'package:giachero_gaia_yologo/widgets/filter_panel.dart';
 import 'package:giachero_gaia_yologo/screens/trip_detail_screen.dart';
 import 'package:giachero_gaia_yologo/services/trip_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
 import 'package:giachero_gaia_yologo/utils/app_strings.dart';
-import 'package:giachero_gaia_yologo/widgets/search_filter_bar.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
+import 'package:giachero_gaia_yologo/widgets/filter_panel.dart';
+import 'package:giachero_gaia_yologo/widgets/search_filter_bar.dart';
 import 'package:giachero_gaia_yologo/widgets/status_message.dart';
 import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
@@ -17,11 +17,15 @@ class ExploreScreen extends StatefulWidget {
   final String userId;
   final Set<String> favoriteIds;
   final void Function(Trip) onToggleFavorite;
+  final String? selectedDestination;
+  final int searchRequestId;
 
   const ExploreScreen({
     required this.userId,
     required this.favoriteIds,
     required this.onToggleFavorite,
+    this.selectedDestination,
+    this.searchRequestId = 0,
     super.key,
   });
 
@@ -66,14 +70,41 @@ class _ExploreScreenState extends State<ExploreScreen> {
   void _onSearch() {
     FocusScope.of(context).unfocus();
     setState(() {
+      _showFilters = false;
       _searchFuture = _search();
     });
+  }
+
+  void _applyDestinationSearch(String destination) {
+    _controller.text = destination;
+    _selectedType = null;
+    _maxPrice = _priceMax;
+    _showFilters = false;
+    _searchFuture = _search();
   }
 
   @override
   void initState() {
     super.initState();
-    _searchFuture = _search();
+    final destination = widget.selectedDestination;
+    if (destination != null && destination.isNotEmpty) {
+      _applyDestinationSearch(destination);
+    } else {
+      _searchFuture = _search();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant ExploreScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final destination = widget.selectedDestination;
+    if (widget.searchRequestId != oldWidget.searchRequestId &&
+        destination != null &&
+        destination.isNotEmpty) {
+      setState(() {
+        _applyDestinationSearch(destination);
+      });
+    }
   }
 
   @override

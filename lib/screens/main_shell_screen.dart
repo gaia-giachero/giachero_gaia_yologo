@@ -20,6 +20,8 @@ class MainShellScreen extends StatefulWidget {
 
 class _MainShellScreenState extends State<MainShellScreen> {
   int _index = 0;
+  String? _city;
+  int _request = 0;
   final Map<String, Trip> _favorites = {};
 
   void _toggleFavorite(Trip trip) {
@@ -35,6 +37,14 @@ class _MainShellScreenState extends State<MainShellScreen> {
   Set<String> get _favoriteIds => _favorites.keys.toSet();
   List<Trip> get _favoriteTrips => _favorites.values.toList();
 
+  void _tapDestination(String citySelected) {
+    setState(() {
+      _city = citySelected;
+      _request++;
+      _index = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +54,14 @@ class _MainShellScreenState extends State<MainShellScreen> {
           HomeScreen(
             favoriteIds: _favoriteIds,
             onToggleFavorite: _toggleFavorite,
+            onDestinationTap: _tapDestination,
           ),
           ExploreScreen(
             userId: widget.user.id,
             favoriteIds: _favoriteIds,
             onToggleFavorite: _toggleFavorite,
+            selectedDestination: _city,
+            searchRequestId: _request,
           ),
           const AddTripScreen(),
           FavoritesScreen(
