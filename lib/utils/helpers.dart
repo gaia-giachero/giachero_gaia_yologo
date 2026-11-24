@@ -33,7 +33,7 @@ class AppSizes {
 
   // POPULAR DESTINATION
   static const double destinationCircleSize = 72;
-  static const double destinationListHeight = 185;
+  static const double destinationListHeight = 105;
   static const double gapDestination = 20;
 
   // DETAILS

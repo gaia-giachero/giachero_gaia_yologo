@@ -35,6 +35,7 @@ class AppStrings {
   static const String tripError = 'Errore durante il caricamento dei dati. Riprova.';
   static const String popularDestination = 'Destinazioni popolari';
   static const String lastTrip = 'Ultimi viaggi last minute';
+  static const String noDestination = 'Nessuna destinazione disponibile';
 
   // Explore 
   static const String titleExplore = 'Pronto ad esplorare nuove destinazioni?';
