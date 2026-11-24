@@ -68,7 +68,13 @@ class AppButton extends StatelessWidget {
                     Icon(icon, size: 20),
                     const SizedBox(width: 8),
                   ],
-                  Text(labelButton),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.paddingHorizontalButton,
+                      vertical: AppSizes.paddingVerticalButton,
+                    ),
+                    child: Text(labelButton),
+                  ),
                 ],
               ),
       ),
