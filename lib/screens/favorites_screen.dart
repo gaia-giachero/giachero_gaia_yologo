@@ -11,13 +11,17 @@ import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
 
 class FavoritesScreen extends StatelessWidget {
   final List<Trip> favorites;
+  final ValueChanged<Trip> onToggleFavorites;
   final VoidCallback onExploreTap;
-  final void Function(Trip) onToggleFavorites;
+  final bool hasError;
+  final VoidCallback onRetry;
 
   const FavoritesScreen({
     required this.favorites,
-    required this.onExploreTap,
     required this.onToggleFavorites,
+    required this.onExploreTap,
+    required this.hasError,
+    required this.onRetry,
     super.key,
   });
 
@@ -42,6 +46,16 @@ class FavoritesScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSizes.generalGapFav),
+
+              if (hasError)
+                Center(
+                  child: StatusMessage(
+                    message: AppStrings.favoriteError,
+                    textButton: AppStrings.errorButton,
+                    onPressed: onRetry,
+                  ),
+                ),
+
               if (favorites.isEmpty)
                 Expanded(
                   child: Center(
