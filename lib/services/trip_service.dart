@@ -1,5 +1,6 @@
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/trip_filters.dart';
+import 'package:giachero_gaia_yologo/models/trip_type.dart';
 import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -65,11 +66,34 @@ class TripService {
   static const int maxPopularDestination = 6;
   static Future<List<String>> fetchPopularDestinations() async {
     final response = await Supabase.instance.client
-      .from('popular_destinations')
-      .select('city')
-      .limit(maxPopularDestination);
+        .from('popular_destinations')
+        .select('city')
+        .limit(maxPopularDestination);
 
-    return (response as List)
-      .map((row) => row['city'] as String).toList();
+    return (response as List).map((row) => row['city'] as String).toList();
+  }
+
+  static Future<void> createTrip({
+    required String ownerId,
+    required String title,
+    required String city,
+    required DateTime startDate,
+    required DateTime endDate,
+    required int price,
+    required TripType type,
+    required String description,
+  }) async {
+    final client = Supabase.instance.client;
+
+    await client.from('trips').insert({
+      'owner_id': ownerId,
+      'title': title.trim(),
+      'city': city.trim(),
+      'start_date': DateFormatter.formatForDatabase(startDate),
+      'end_date': DateFormatter.formatForDatabase(endDate),
+      'price': price,
+      'trip_type': type.name,
+      'description': description.trim(),
+    });
   }
 }
