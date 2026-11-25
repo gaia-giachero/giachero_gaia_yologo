@@ -116,45 +116,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AppSizes.paddingHorizontalPage,
             AppSizes.paddingBottomPage,
           ),
-          child: ListView(
-            children: [
-              ProfileHeader(username: usernameUser),
-              const SizedBox(height: AppSizes.gapText),
-              if (bioUser != null)
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context)
+                .copyWith(overscroll: false),
+            child: ListView(
+              children: [
+                ProfileHeader(username: usernameUser),
+                const SizedBox(height: AppSizes.gapText),
+                if (bioUser != null)
+                  Text(
+                    bioUser,
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.of(context).textSecondary,
+                    ),
+                  ),
+                const SizedBox(height: AppSizes.gapText),
+                AppButton(
+                  labelButton: AppStrings.settingsProfile,
+                  onTap: () async {
+                    final updatedUser = await Navigator.push<User>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SettingsScreen(user: _currentUser),
+                      ),
+                    );
+
+                    if (updatedUser != null) {
+                      setState(() {
+                        _currentUser = updatedUser;
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: AppSizes.gapProfile),
                 Text(
-                  bioUser,
-                  style: AppTextStyles.body.copyWith(
-                    color: AppColors.of(context).textSecondary,
+                  AppStrings.profileMyTrip,
+                  style: AppTextStyles.h3.copyWith(
+                    color: AppColors.of(context).textPrimary,
                   ),
                 ),
-              const SizedBox(height: AppSizes.gapText),
-              AppButton(
-                labelButton: AppStrings.settingsProfile,
-                onTap: () async {
-                  final updatedUser = await Navigator.push<User>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SettingsScreen(user: _currentUser),
-                    ),
-                  );
-
-                  if (updatedUser != null) {
-                    setState(() {
-                      _currentUser = updatedUser;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: AppSizes.gapProfile),
-              Text(
-                AppStrings.profileMyTrip,
-                style: AppTextStyles.h3.copyWith(
-                  color: AppColors.of(context).textPrimary,
-                ),
-              ),
-              const SizedBox(height: AppSizes.gapText),
-              _buildTrips(),
-            ],
+                const SizedBox(height: AppSizes.gapText),
+                _buildTrips(),
+              ],
+            ),
           ),
         ),
       ),

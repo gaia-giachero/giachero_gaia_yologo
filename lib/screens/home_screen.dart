@@ -87,155 +87,162 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSizes.paddingHorizontalPage,
-            AppSizes.paddingTopPage,
-            AppSizes.paddingHorizontalPage,
-            AppSizes.paddingBottomPage,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                AppStrings.titleHome,
-                style: AppTextStyles.brandTitle.copyWith(
-                  color: AppColors.of(context).textPrimary,
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(overscroll: false),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.paddingHorizontalPage,
+              AppSizes.paddingTopPage,
+              AppSizes.paddingHorizontalPage,
+              AppSizes.paddingBottomPage,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  AppStrings.titleHome,
+                  style: AppTextStyles.brandTitle.copyWith(
+                    color: AppColors.of(context).textPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSizes.gapTitle),
-              Text(
-                AppStrings.intestationHome,
-                style: AppTextStyles.h3.copyWith(
-                  color: AppColors.of(context).textSecondary,
+                const SizedBox(height: AppSizes.gapTitle),
+                Text(
+                  AppStrings.intestationHome,
+                  style: AppTextStyles.h3.copyWith(
+                    color: AppColors.of(context).textSecondary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSizes.gapSectionHome),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.of(context).border,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusSection),
+                const SizedBox(height: AppSizes.gapSectionHome),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.of(context).border,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSection),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSizes.paddingHorizontalSection,
+                    vertical: AppSizes.paddingVerticalSection,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppStrings.popularDestination,
+                        style: AppTextStyles.h4.copyWith(
+                          color: AppColors.of(context).textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSizes.gapSectionHome),
+                      FutureBuilder<List<({String city, String? imageUrl})>>(
+                        future: _popularDestinationsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return SizedBox(
+                              height: AppSizes.destinationListHeight,
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            return StatusMessage(
+                              message: AppStrings.destinationError,
+                              onPressed: () => setState(() {
+                                _popularDestinationsFuture =
+                                    _loadPopularDestinations();
+                              }),
+                            );
+                          }
+
+                          final destinations = snapshot.data ?? [];
+
+                          if (destinations.isEmpty) {
+                            return Text(AppStrings.noDestination);
+                          }
+
+                          return SizedBox(
+                            height: AppSizes.destinationListHeight,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: destinations.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                    width: AppSizes.gapDestination,
+                                  ),
+                              itemBuilder: (context, index) {
+                                final item = destinations[index];
+                                return PopularDestinationItem(
+                                  city: item.city,
+                                  imageUrl: item.imageUrl,
+                                  onTap: () =>
+                                      widget.onDestinationTap(item.city),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSizes.paddingHorizontalSection,
-                  vertical: AppSizes.paddingVerticalSection,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                const SizedBox(height: AppSizes.gapSectionHome),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      AppStrings.popularDestination,
-                      style: AppTextStyles.h4.copyWith(
+                      AppStrings.lastTrip,
+                      style: AppTextStyles.h3.copyWith(
                         color: AppColors.of(context).textPrimary,
                       ),
                     ),
-                    const SizedBox(height: AppSizes.gapSectionHome),
-                    FutureBuilder<List<({String city, String? imageUrl})>>(
-                      future: _popularDestinationsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return SizedBox(
-                            height: AppSizes.destinationListHeight,
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-
-                        if (snapshot.hasError) {
-                          return StatusMessage(
-                            message: AppStrings.destinationError,
-                            onPressed: () => setState(() {
-                              _popularDestinationsFuture =
-                                  _loadPopularDestinations();
-                            }),
-                          );
-                        }
-
-                        final destinations = snapshot.data ?? [];
-
-                        if (destinations.isEmpty) {
-                          return Text(AppStrings.noDestination);
-                        }
-
-                        return SizedBox(
-                          height: AppSizes.destinationListHeight,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: destinations.length,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(width: AppSizes.gapDestination),
-                            itemBuilder: (context, index) {
-                              final item = destinations[index];
-                              return PopularDestinationItem(
-                                city: item.city,
-                                imageUrl: item.imageUrl,
-                                onTap: () => widget.onDestinationTap(item.city),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSizes.gapSectionHome),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    AppStrings.lastTrip,
-                    style: AppTextStyles.h3.copyWith(
-                      color: AppColors.of(context).textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.gapCard),
-                  _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _upcomingTrips.isEmpty
-                      ? Text('Nessun viaggio in partenza nei prossimi 2 giorni')
-                      : SizedBox(
-                          height: AppSizes.heightLastTrip,
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            itemCount: _upcomingTrips.length,
-                            scrollDirection: Axis.horizontal,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(width: AppSizes.gapCard),
-                            itemBuilder: (BuildContext context, int index) {
-                              final trip = _upcomingTrips[index];
-                              return SizedBox(
-                                width: AppSizes.widthCard,
-                                child: TripCard(
-                                  trip: trip,
-                                  isFavorite: widget.favoriteIds.contains(
-                                    trip.id,
-                                  ),
-                                  onFavoriteTap: () =>
-                                      widget.onToggleFavorite(trip),
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TripDetailScreen(
-                                        trip: trip,
-                                        isFavorite: widget.favoriteIds.contains(
-                                          trip.id,
+                    const SizedBox(height: AppSizes.gapCard),
+                    _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _upcomingTrips.isEmpty
+                        ? Text(
+                            'Nessun viaggio in partenza nei prossimi 2 giorni',
+                          )
+                        : SizedBox(
+                            height: AppSizes.heightLastTrip,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: _upcomingTrips.length,
+                              scrollDirection: Axis.horizontal,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(width: AppSizes.gapCard),
+                              itemBuilder: (BuildContext context, int index) {
+                                final trip = _upcomingTrips[index];
+                                return SizedBox(
+                                  width: AppSizes.widthCard,
+                                  child: TripCard(
+                                    trip: trip,
+                                    isFavorite: widget.favoriteIds.contains(
+                                      trip.id,
+                                    ),
+                                    onFavoriteTap: () =>
+                                        widget.onToggleFavorite(trip),
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TripDetailScreen(
+                                          trip: trip,
+                                          isFavorite: widget.favoriteIds
+                                              .contains(trip.id),
+                                          onToggleFavorite: () =>
+                                              widget.onToggleFavorite(trip),
                                         ),
-                                        onToggleFavorite: () =>
-                                            widget.onToggleFavorite(trip),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

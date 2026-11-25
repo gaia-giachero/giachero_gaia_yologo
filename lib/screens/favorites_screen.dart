@@ -36,67 +36,72 @@ class FavoritesScreen extends StatelessWidget {
             AppSizes.paddingHorizontalPage,
             AppSizes.paddingBottomPage,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppStrings.myFavorites,
-                style: AppTextStyles.h1.copyWith(
-                  color: AppColors.of(context).textPrimary,
-                ),
-              ),
-              const SizedBox(height: AppSizes.generalGapFav),
-
-              if (hasError)
-                Center(
-                  child: StatusMessage(
-                    message: AppStrings.favoriteError,
-                    textButton: AppStrings.errorButton,
-                    onPressed: onRetry,
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context)
+                .copyWith(overscroll: false),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.myFavorites,
+                  style: AppTextStyles.h1.copyWith(
+                    color: AppColors.of(context).textPrimary,
                   ),
                 ),
+                const SizedBox(height: AppSizes.generalGapFav),
 
-              if (favorites.isEmpty)
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        StatusMessage(message: AppStrings.favoriteNoFav),
-                        AppButton(
-                          labelButton: AppStrings.exploreAddTrip,
-                          onTap: onExploreTap,
-                        ),
-                      ],
+                if (hasError)
+                  Center(
+                    child: StatusMessage(
+                      message: AppStrings.favoriteError,
+                      textButton: AppStrings.errorButton,
+                      onPressed: onRetry,
                     ),
                   ),
-                ),
 
-              if (favorites.isNotEmpty)
-                Expanded(
-                  child: ListView(
-                    children: [
-                      for (final trip in favorites)
-                        TripCard(
-                          trip: trip,
-                          isFavorite: true,
-                          onFavoriteTap: () => onToggleFavorites(trip),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TripDetailScreen(
-                                trip: trip,
-                                isFavorite: true,
-                                onToggleFavorite: () => onToggleFavorites(trip),
+                if (favorites.isEmpty)
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StatusMessage(message: AppStrings.favoriteNoFav),
+                          AppButton(
+                            labelButton: AppStrings.exploreAddTrip,
+                            onTap: onExploreTap,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                if (favorites.isNotEmpty)
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        for (final trip in favorites)
+                          TripCard(
+                            trip: trip,
+                            isFavorite: true,
+                            onFavoriteTap: () => onToggleFavorites(trip),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripDetailScreen(
+                                  trip: trip,
+                                  isFavorite: true,
+                                  onToggleFavorite: () =>
+                                      onToggleFavorites(trip),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

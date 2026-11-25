@@ -172,35 +172,40 @@ class _ExploreScreenState extends State<ExploreScreen> {
             AppSizes.paddingHorizontalPage,
             AppSizes.paddingBottomPage,
           ),
-          child: ListView(
-            children: [
-              Text(
-                AppStrings.titleExplore,
-                style: AppTextStyles.h1.copyWith(
-                  color: AppColors.of(context).textPrimary,
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context)
+                .copyWith(overscroll: false),
+            child: ListView(
+              children: [
+                Text(
+                  AppStrings.titleExplore,
+                  style: AppTextStyles.h1.copyWith(
+                    color: AppColors.of(context).textPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSizes.paddingText),
-              SearchFilterBar(
-                controller: _controller,
-                onSearchTap: _onSearch,
-                onFilterTap: _toggleFilters,
-                hasActiveFilters: _filters.isActive,
-              ),
-              if (_showFilters) ...[
                 const SizedBox(height: AppSizes.paddingText),
-                FilterPanel(
-                  minPrice: _priceMin,
-                  maxPrice: _priceMax,
-                  value: _maxPrice,
-                  onValueChanged: (value) => setState(() => _maxPrice = value),
-                  selectedType: _selectedType,
-                  onTypeSelected: _selectType,
+                SearchFilterBar(
+                  controller: _controller,
+                  onSearchTap: _onSearch,
+                  onFilterTap: _toggleFilters,
+                  hasActiveFilters: _filters.isActive,
                 ),
+                if (_showFilters) ...[
+                  const SizedBox(height: AppSizes.paddingText),
+                  FilterPanel(
+                    minPrice: _priceMin,
+                    maxPrice: _priceMax,
+                    value: _maxPrice,
+                    onValueChanged: (value) =>
+                        setState(() => _maxPrice = value),
+                    selectedType: _selectedType,
+                    onTypeSelected: _selectType,
+                  ),
+                ],
+                const SizedBox(height: AppSizes.paddingText),
+                _buildTrips(),
               ],
-              const SizedBox(height: AppSizes.paddingText),
-              _buildTrips(),
-            ],
+            ),
           ),
         ),
       ),
