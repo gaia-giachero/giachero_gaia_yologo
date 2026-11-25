@@ -12,6 +12,7 @@ class AppTextField extends StatefulWidget {
   final bool isPassword;
   final bool isRequired;
   final bool showLabel;
+  final bool enabled;
   final int maxLines;
   final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
@@ -24,6 +25,7 @@ class AppTextField extends StatefulWidget {
     this.isPassword = false,
     this.isRequired = false,
     this.showLabel = true,
+    this.enabled = true,
     this.maxLines = 1,
     this.onChanged,
     this.validator,
@@ -58,6 +60,7 @@ class _AppTextFieldState extends State<AppTextField> {
           const SizedBox(height: AppSizes.fieldLabelGap),
         ],
         TextFormField(
+          enabled: widget.enabled,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: widget.controller,
           obscureText: _hidden,
@@ -66,6 +69,7 @@ class _AppTextFieldState extends State<AppTextField> {
           validator: widget.validator,
           decoration: InputDecoration(
             hintText: widget.hintText,
+            suffixText: widget.suffixText,
             suffixIcon: widget.isPassword
                 ? IconButton(
                     onPressed: () => setState(() => _hidden = !_hidden),
