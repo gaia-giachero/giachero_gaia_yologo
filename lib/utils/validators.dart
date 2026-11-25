@@ -13,12 +13,13 @@ class Validators {
     final number = int.tryParse(value.trim());
     if (number == null) return AppStrings.invalidPrice;
     if (number < 0) return AppStrings.negativePrice;
-    
+
     return null;
   }
- 
+
   static String? returnDate(DateTime? departure, DateTime? returnDate) {
-    if (departure == null || returnDate == null) return AppStrings.requiredField;
+    if (departure == null || returnDate == null)
+      return AppStrings.requiredField;
 
     if (!returnDate.isAfter(departure)) return AppStrings.returnBeforeDeparture;
 
@@ -37,6 +38,12 @@ class Validators {
     if (value == null || value.trim().isEmpty) return AppStrings.requiredField;
 
     if (value.length < 6) return AppStrings.shortPassword;
+
+    return null;
+  }
+
+  static String? notNull(Object? value) {
+    if (value == null) return AppStrings.requiredField;
 
     return null;
   }
