@@ -155,6 +155,11 @@ class _MainShellScreenState extends State<MainShellScreen> {
           ProfileScreen(
             userProfile: widget.user,
             refreshRequestId: _tripsRefreshRequest,
+            onAddTripTap: () {
+              setState(() {
+                _index = 2;
+              });
+            },
           ),
         ],
       ),
