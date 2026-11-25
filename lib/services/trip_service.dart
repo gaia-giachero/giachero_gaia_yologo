@@ -1,6 +1,7 @@
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/trip_filters.dart';
 import 'package:giachero_gaia_yologo/models/trip_type.dart';
+import 'package:giachero_gaia_yologo/services/image_service.dart';
 import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -84,6 +85,7 @@ class TripService {
     required String description,
   }) async {
     final client = Supabase.instance.client;
+    final imageUrl = await ImageService.fetchCityImage(city);
 
     await client.from('trips').insert({
       'owner_id': ownerId,
@@ -94,6 +96,7 @@ class TripService {
       'price': price,
       'trip_type': type.name,
       'description': description.trim(),
+      'image_url': imageUrl,
     });
   }
 }
