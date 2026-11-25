@@ -13,8 +13,8 @@ class FavoriteService {
 
     return rows
         .map((row) => row['trips'])
-        .whereType()
-        .map((tripMap) => Trip.fromMap(tripMap))
+        .whereType<Map<String, dynamic>>()
+        .map(Trip.fromMap)
         .toList();
   }
 
@@ -24,13 +24,10 @@ class FavoriteService {
   }) async {
     final client = Supabase.instance.client;
 
-    await client.from('favorites').upsert(
-      {
-        'user_id': userId,
-        'trip_id': tripId,
-      },
-      onConflict: 'user_id,trip_id',
-    );
+    await client.from('favorites').upsert({
+      'user_id': userId,
+      'trip_id': tripId,
+    }, onConflict: 'user_id,trip_id');
   }
 
   static Future<void> removeFavorite({
