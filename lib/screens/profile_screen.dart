@@ -12,13 +12,17 @@ import 'package:giachero_gaia_yologo/widgets/app_button.dart';
 import 'package:giachero_gaia_yologo/widgets/profile_header.dart';
 import 'package:giachero_gaia_yologo/widgets/status_message.dart';
 import 'package:giachero_gaia_yologo/widgets/trip_card.dart';
+import 'package:giachero_gaia_yologo/screens/add_trip_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User userProfile;
   final int refreshRequestId;
+  final VoidCallback? onAddTripTap;
+
   const ProfileScreen({
     required this.userProfile,
     required this.refreshRequestId,
+    this.onAddTripTap,
     super.key,
   });
 
@@ -34,6 +38,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _tripsFuture = TripService.fetchTripsByOwner(_currentUser.id);
     });
+  }
+
+  Future<void> _openEditTrip(Trip trip) async {
+    final result = await Navigator.of(context).push<EditTripResult>(
+      MaterialPageRoute(
+        builder: (_) => AddTripScreen(userId: _currentUser.id, trip: trip),
+      ),
+    );
+
+    if (result != null && mounted) {
+      _loadTrips();
+    }
   }
 
   @override
@@ -73,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             message: AppStrings.profileNoTrip,
             textButton: AppStrings.addFirstTrip,
             buttonVariant: AppButtonVariant.primary,
-            onPressed: () {},
+            onPressed: widget.onAddTripTap,
           );
         }
 
@@ -82,17 +98,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             for (final trip in trips) ...[
               TripCard(
                 trip: trip,
-                onEditTap: () {},
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TripDetailScreen(
-                      trip: trip,
-                      isOwner: true,
-                      onEditTap: () {},
-                    ),
-                  ),
-                ),
+                onEditTap: () => _openEditTrip(trip),
+                onTap: () async {
+                  final result = await Navigator.of(context)
+                      .push<EditTripResult>(
+                        MaterialPageRoute(
+                          builder: (context) => TripDetailScreen(
+                            trip: trip,
+                            isOwner: true,
+                            userId: _currentUser.id,
+                          ),
+                        ),
+                      );
+
+                  if (result != null && mounted) {
+                    _loadTrips();
+                  }
+                },
               ),
               const SizedBox(height: AppSizes.gapText),
             ],
