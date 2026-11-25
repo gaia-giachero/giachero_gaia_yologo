@@ -85,7 +85,7 @@ class TripService {
     required String description,
   }) async {
     final client = Supabase.instance.client;
-    final imageUrl = await ImageService.fetchCityImage(city);
+    final imageUrl = await _fetchImageSafely(city.trim());
 
     await client.from('trips').insert({
       'owner_id': ownerId,
@@ -98,5 +98,75 @@ class TripService {
       'description': description.trim(),
       'image_url': imageUrl,
     });
+  }
+
+  static Future<String?> _fetchImageSafely(String city) async {
+    try {
+      return await ImageService.fetchCityImage(city);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<Trip> updateTrip({
+    required Trip original,
+    required String title,
+    required String city,
+    required DateTime startDate,
+    required DateTime endDate,
+    required int price,
+    required TripType type,
+    required String description,
+  }) async {
+    final client = Supabase.instance.client;
+
+    String? imageUrl = original.imageUrl;
+    if (original.city != city.trim() || original.type != type) {
+      imageUrl = await _fetchImageSafely(city.trim()) ?? original.imageUrl;
+    }
+
+    final row = await client
+        .from('trips')
+        .update({
+          'title': title.trim(),
+          'city': city.trim(),
+          'start_date': DateFormatter.formatForDatabase(startDate),
+          'end_date': DateFormatter.formatForDatabase(endDate),
+          'price': price,
+          'trip_type': type.name,
+          'description': description.trim(),
+          'image_url': imageUrl,
+        })
+        .eq('id', original.id)
+        .select()
+        .maybeSingle();
+
+    if (row == null) {
+      throw Exception('Nessuna riga aggiornata');
+    }
+
+    return Trip.fromMap(row);
+  }
+
+  static Future<void> deleteTrip(String tripId) async {
+    final rows = await Supabase.instance.client
+        .from('trips')
+        .delete()
+        .eq('id', tripId)
+        .select();
+
+    if (rows.isEmpty) {
+      throw Exception('Nessuna riga eliminata');
+    }
+  }
+
+  static Future<Trip?> fetchTripsById(String tripId) async {
+    final rows = await Supabase.instance.client
+        .from('trips')
+        .select()
+        .eq('id', tripId)
+        .maybeSingle();
+
+    return rows != null ? Trip.fromMap(rows) : null;
   }
 }
