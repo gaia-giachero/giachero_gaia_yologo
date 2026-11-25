@@ -26,9 +26,11 @@ class _MainShellScreenState extends State<MainShellScreen> {
   int _tripsRefreshRequest = 0;
   final Map<String, Trip> _favorites = {};
   bool _hasFavoritesError = false;
+  bool _isLoadingFavorites = true;
 
   Future<void> _loadFavorites() async {
     setState(() {
+      _isLoadingFavorites = true;
       _hasFavoritesError = false;
     });
 
@@ -40,11 +42,14 @@ class _MainShellScreenState extends State<MainShellScreen> {
         for (final trip in trips) {
           _favorites[trip.id] = trip;
         }
+        _isLoadingFavorites = false;
       });
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('Errore caricamento preferiti: $e\n$st');
       if (!mounted) return;
       setState(() {
         _hasFavoritesError = true;
+        _isLoadingFavorites = false;
       });
     }
   }
@@ -144,6 +149,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
             onToggleFavorites: _toggleFavorite,
             onExploreTap: () => setState(() => _index = 1),
             hasError: _hasFavoritesError,
+            isLoading: _isLoadingFavorites,
             onRetry: _loadFavorites,
           ),
           ProfileScreen(

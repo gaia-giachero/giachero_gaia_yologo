@@ -14,6 +14,7 @@ class FavoritesScreen extends StatelessWidget {
   final ValueChanged<Trip> onToggleFavorites;
   final VoidCallback onExploreTap;
   final bool hasError;
+  final bool isLoading;
   final VoidCallback onRetry;
 
   const FavoritesScreen({
@@ -21,6 +22,7 @@ class FavoritesScreen extends StatelessWidget {
     required this.onToggleFavorites,
     required this.onExploreTap,
     required this.hasError,
+    required this.isLoading,
     required this.onRetry,
     super.key,
   });
@@ -47,7 +49,11 @@ class FavoritesScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppSizes.generalGapFav),
 
-              if (hasError)
+              if (isLoading)
+                const Expanded(
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (hasError)
                 Expanded(
                   child: Center(
                     child: StatusMessage(
