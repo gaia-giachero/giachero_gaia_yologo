@@ -67,13 +67,13 @@ class AppStrings {
   static const String subtitleAdd = 'Crea la tua prossima proposta last-minute.';
 
   // Label AddTrip
-  static const String titleTrip = 'Titolo viaggio *';
-  static const String cityTrip = 'Città di destinazione *';
-  static const String departureTrip = 'Partenza *';
-  static const String returnTrip = 'Ritorno *';
-  static const String priceTrip = 'Prezzo (€) *';
-  static const String typeTrip = 'Tipologia *';
-  static const String descriptionTrip = 'Descrizione *';
+  static const String titleTrip = 'Titolo viaggio';
+  static const String cityTrip = 'Città di destinazione';
+  static const String departureTrip = 'Partenza';
+  static const String returnTrip = 'Ritorno';
+  static const String priceTrip = 'Prezzo (€)';
+  static const String typeTrip = 'Tipologia';
+  static const String descriptionTrip = 'Descrizione';
 
   // Hint AddTrip
   static const String hintTitleTrip = 'Titolo del viaggio';
