@@ -106,147 +106,137 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           SafeArea(
             child: Center(
-              child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context)
-                    .copyWith(overscroll: false),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.paddingHorizontal,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppStrings.title,
-                              style: AppTextStyles.brandTitle.copyWith(
-                                color: AppColors.of(context).textLogin,
-                              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.paddingHorizontal,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppStrings.title,
+                            style: AppTextStyles.brandTitle.copyWith(
+                              color: AppColors.of(context).textLogin,
                             ),
-                            Text(
-                              AppStrings.intestation,
-                              style: AppTextStyles.body.copyWith(
-                                color: AppColors.of(context).textLogin,
-                              ),
+                          ),
+                          Text(
+                            AppStrings.intestation,
+                            style: AppTextStyles.body.copyWith(
+                              color: AppColors.of(context).textLogin,
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSizes.gapTitleCard),
-                        SingleChildScrollView(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              AppSizes.radiusBox,
-                            ),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                              child: Container(
-                                color: AppColors.of(context).background
-                                    .withValues(
-                                      alpha: 0.5,
-                                    ), // fill semitrasparente
-                                child: SizedBox(
-                                  width: AppSizes.widthBox,
-                                  height: AppSizes.heightBox,
-                                  // child: SingleChildScrollView(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                      AppSizes.paddingBox,
-                                      AppSizes.paddingBox,
-                                      AppSizes.paddingBox,
-                                      AppSizes.paddingBottomBox,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          AppStrings.titleLogin,
-                                          style: AppTextStyles.h4.copyWith(
-                                            color: AppColors.of(context)
-                                                .textPrimary,
-                                          ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSizes.gapTitleCard),
+                      SingleChildScrollView(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusBox,
+                          ),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                            child: Container(
+                              color: AppColors.of(context).background
+                                  .withValues(
+                                    alpha: 0.5,
+                                  ), // fill semitrasparente
+                              child: SizedBox(
+                                width: AppSizes.widthBox,
+                                height: AppSizes.heightBox,
+                                // child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    AppSizes.paddingBox,
+                                    AppSizes.paddingBox,
+                                    AppSizes.paddingBox,
+                                    AppSizes.paddingBottomBox,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppStrings.titleLogin,
+                                        style: AppTextStyles.h4.copyWith(
+                                          color: AppColors.of(context)
+                                              .textPrimary,
                                         ),
-                                        Text(
-                                          AppStrings.intestationLogin,
-                                          style: AppTextStyles.bodyLarge
-                                              .copyWith(
-                                                color: AppColors.of(context)
-                                                    .textPrimary,
-                                              ),
+                                      ),
+                                      Text(
+                                        AppStrings.intestationLogin,
+                                        style: AppTextStyles.bodyLarge.copyWith(
+                                          color: AppColors.of(context)
+                                              .textPrimary,
                                         ),
-                                        const SizedBox(
-                                          height: AppSizes.gapTextBox,
-                                        ),
-                                        AppTextField(
-                                          labelText: AppStrings.hintLabelEmail,
-                                          hintText: AppStrings.hintLabelEmail,
-                                          controller: emailController,
-                                          validator: Validators.email,
-                                        ),
-                                        const SizedBox(
-                                          height: AppSizes.gapFieldBox,
-                                        ),
-                                        AppTextField(
-                                          labelText:
-                                              AppStrings.hintLabelPassword,
-                                          hintText:
-                                              AppStrings.hintLabelPassword,
-                                          isPassword: true,
-                                          controller: passwordController,
-                                          validator: Validators.password,
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: InkWell(
-                                            child: Text(
-                                              AppStrings.forgotPassword,
-                                              style: AppTextStyles.body
-                                                  .copyWith(
-                                                    color: AppColors.of(context)
-                                                        .primary,
-                                                  ),
-                                            ),
-                                            onTap: () {
-                                              _mostraBottomSheet(context);
-                                            },
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: AppSizes.gapTextBox,
-                                        ),
-                                        if (error != null)
-                                          Text(
-                                            error,
+                                      ),
+                                      const SizedBox(
+                                        height: AppSizes.gapTextBox,
+                                      ),
+                                      AppTextField(
+                                        labelText: AppStrings.hintLabelEmail,
+                                        hintText: AppStrings.hintLabelEmail,
+                                        controller: emailController,
+                                        validator: Validators.email,
+                                      ),
+                                      const SizedBox(
+                                        height: AppSizes.gapFieldBox,
+                                      ),
+                                      AppTextField(
+                                        labelText: AppStrings.hintLabelPassword,
+                                        hintText: AppStrings.hintLabelPassword,
+                                        isPassword: true,
+                                        controller: passwordController,
+                                        validator: Validators.password,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: InkWell(
+                                          child: Text(
+                                            AppStrings.forgotPassword,
                                             style: AppTextStyles.body.copyWith(
                                               color: AppColors.of(context)
-                                                  .error,
+                                                  .primary,
                                             ),
                                           ),
-                                        const SizedBox(
-                                          height: AppSizes.gapTextBox,
+                                          onTap: () {
+                                            _mostraBottomSheet(context);
+                                          },
                                         ),
-                                        AppButton(
-                                          labelButton: AppStrings.loginButton,
-                                          isLoading: _isLoading,
-                                          onTap: _login,
+                                      ),
+                                      const SizedBox(
+                                        height: AppSizes.gapTextBox,
+                                      ),
+                                      if (error != null)
+                                        Text(
+                                          error,
+                                          style: AppTextStyles.body.copyWith(
+                                            color: AppColors.of(context).error,
+                                          ),
                                         ),
-                                      ],
-                                    ),
+                                      const SizedBox(
+                                        height: AppSizes.gapTextBox,
+                                      ),
+                                      AppButton(
+                                        labelButton: AppStrings.loginButton,
+                                        isLoading: _isLoading,
+                                        onTap: _login,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          // ),
                         ),
-                      ],
-                    ),
+                        // ),
+                      ),
+                    ],
                   ),
                 ),
               ),

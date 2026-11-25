@@ -27,6 +27,7 @@ Future<void> main() async {
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: currentMode,
+          scrollBehavior: const MaterialScrollBehavior().copyWith(overscroll: false),
           home: const LoginScreen(),
         );
       },

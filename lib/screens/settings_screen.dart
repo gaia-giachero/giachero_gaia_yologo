@@ -60,140 +60,136 @@ class _SettingScreenState extends State<SettingsScreen> {
             AppSizes.paddingHorizontalPage,
             AppSizes.paddingBottomPage,
           ),
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context)
-                .copyWith(overscroll: false),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: _cancelAndPop,
-                        icon: const Icon(Icons.arrow_back_ios),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: _cancelAndPop,
+                      icon: const Icon(Icons.arrow_back_ios),
+                      color: AppColors.of(context).textPrimary,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    SizedBox(width: AppSizes.gapBackButton),
+                    Text(
+                      AppStrings.profile,
+                      style: AppTextStyles.h3.copyWith(
                         color: AppColors.of(context).textPrimary,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
                       ),
-                      SizedBox(width: AppSizes.gapBackButton),
-                      Text(
-                        AppStrings.profile,
-                        style: AppTextStyles.h3.copyWith(
-                          color: AppColors.of(context).textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: AppSizes.gapSettings),
-                  Center(child: ProfileHeader(username: username)),
-                  SizedBox(height: AppSizes.gapSettings),
-                  Text(
-                    AppStrings.modify,
-                    style: AppTextStyles.cardTitle.copyWith(
-                      color: AppColors.of(context).textPrimary,
                     ),
+                  ],
+                ),
+                SizedBox(height: AppSizes.gapSettings),
+                Center(child: ProfileHeader(username: username)),
+                SizedBox(height: AppSizes.gapSettings),
+                Text(
+                  AppStrings.modify,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    color: AppColors.of(context).textPrimary,
                   ),
-                  SizedBox(height: AppSizes.gapSettings),
-                  AppTextField(
-                    controller: _usernameController,
-                    labelText: username,
-                    hintText: username,
-                    showLabel: false,
-                    onChanged: (_) => setState(() {}),
+                ),
+                SizedBox(height: AppSizes.gapSettings),
+                AppTextField(
+                  controller: _usernameController,
+                  labelText: username,
+                  hintText: username,
+                  showLabel: false,
+                  onChanged: (_) => setState(() {}),
+                ),
+                SizedBox(height: AppSizes.gapSettings),
+                AppTextField(
+                  controller: _bioController,
+                  labelText: bio,
+                  hintText: bio,
+                  showLabel: false,
+                  maxLines: 4,
+                ),
+                SizedBox(height: AppSizes.gapSettings),
+                const Divider(),
+                SizedBox(height: AppSizes.gapSettings),
+                Text(
+                  AppStrings.theme,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    color: AppColors.of(context).textPrimary,
                   ),
-                  SizedBox(height: AppSizes.gapSettings),
-                  AppTextField(
-                    controller: _bioController,
-                    labelText: bio,
-                    hintText: bio,
-                    showLabel: false,
-                    maxLines: 4,
-                  ),
-                  SizedBox(height: AppSizes.gapSettings),
-                  const Divider(),
-                  SizedBox(height: AppSizes.gapSettings),
-                  Text(
-                    AppStrings.theme,
-                    style: AppTextStyles.cardTitle.copyWith(
-                      color: AppColors.of(context).textPrimary,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppStrings.themeDark),
+                    Switch(
+                      value: themeNotifier.value == ThemeMode.dark,
+                      onChanged: (isDark) {
+                        setState(() {
+                          themeNotifier.value = isDark
+                              ? ThemeMode.dark
+                              : ThemeMode.light;
+                        });
+                      },
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(AppStrings.themeDark),
-                      Switch(
-                        value: themeNotifier.value == ThemeMode.dark,
-                        onChanged: (isDark) {
-                          setState(() {
-                            themeNotifier.value = isDark
-                                ? ThemeMode.dark
-                                : ThemeMode.light;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: AppSizes.gapSettings),
-                  const Divider(),
-                  SizedBox(height: AppSizes.gapSettings),
-                  AppButton(
-                    labelButton: AppStrings.saveSettings,
-                    onTap: () async {
-                      final newUsername = _usernameController.text.trim();
-                      final newBio = _bioController.text.trim();
+                  ],
+                ),
+                SizedBox(height: AppSizes.gapSettings),
+                const Divider(),
+                SizedBox(height: AppSizes.gapSettings),
+                AppButton(
+                  labelButton: AppStrings.saveSettings,
+                  onTap: () async {
+                    final newUsername = _usernameController.text.trim();
+                    final newBio = _bioController.text.trim();
 
-                      final ok = await AuthService.updateProfile(
-                        widget.user.id,
-                        newUsername,
-                        newBio.isEmpty ? null : newBio,
+                    final ok = await AuthService.updateProfile(
+                      widget.user.id,
+                      newUsername,
+                      newBio.isEmpty ? null : newBio,
+                    );
+
+                    if (!context.mounted) return;
+
+                    if (ok) {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool(
+                        'isDarkMode',
+                        themeNotifier.value == ThemeMode.dark,
                       );
 
-                      if (!context.mounted) return;
-
-                      if (ok) {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.setBool(
-                          'isDarkMode',
-                          themeNotifier.value == ThemeMode.dark,
-                        );
-
-                        final updatedUser = widget.user.copyWith(
-                          username: newUsername,
-                          bio: newBio.isEmpty ? null : newBio,
-                        );
-                        Navigator.pop(context, updatedUser);
-                      }
-                    },
-                  ),
-                  SizedBox(height: AppSizes.gapButton),
-                  AppButton(
-                    labelButton: AppStrings.cancelButton,
-                    variant: AppButtonVariant.secondary,
-                    onTap: _cancelAndPop,
-                  ),
-                  SizedBox(height: AppSizes.gapSettings),
-                  const Divider(),
-                  SizedBox(height: AppSizes.gapSettings),
-                  AppButton(
-                    icon: Icons.logout,
-                    labelButton: AppStrings.logoutButton,
-                    variant: AppButtonVariant.secondary,
-                    onTap: () async {
-                      await AuthService.signOut();
-                      if (!context.mounted) return;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
+                      final updatedUser = widget.user.copyWith(
+                        username: newUsername,
+                        bio: newBio.isEmpty ? null : newBio,
                       );
-                    },
-                  ),
-                ],
-              ),
+                      Navigator.pop(context, updatedUser);
+                    }
+                  },
+                ),
+                SizedBox(height: AppSizes.gapButton),
+                AppButton(
+                  labelButton: AppStrings.cancelButton,
+                  variant: AppButtonVariant.secondary,
+                  onTap: _cancelAndPop,
+                ),
+                SizedBox(height: AppSizes.gapSettings),
+                const Divider(),
+                SizedBox(height: AppSizes.gapSettings),
+                AppButton(
+                  icon: Icons.logout,
+                  labelButton: AppStrings.logoutButton,
+                  variant: AppButtonVariant.secondary,
+                  onTap: () async {
+                    await AuthService.signOut();
+                    if (!context.mounted) return;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),

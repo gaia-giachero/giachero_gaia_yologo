@@ -47,36 +47,33 @@ class _AddTripScreenState extends State<AddTripScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(overscroll: false),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSizes.paddingHorizontalPage,
-                  AppSizes.paddingTopPage,
-                  AppSizes.paddingHorizontalPage,
-                  AppSizes.paddingBottomPage,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      AppStrings.titleAdd,
-                      style: AppTextStyles.display.copyWith(
-                        color: AppColors.of(context).textPrimary,
-                      ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSizes.paddingHorizontalPage,
+                AppSizes.paddingTopPage,
+                AppSizes.paddingHorizontalPage,
+                AppSizes.paddingBottomPage,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    AppStrings.titleAdd,
+                    style: AppTextStyles.display.copyWith(
+                      color: AppColors.of(context).textPrimary,
                     ),
-                    const SizedBox(height: AppSizes.gapForm),
-                    Text(
-                      AppStrings.subtitleAdd,
-                      style: AppTextStyles.h3.copyWith(
-                        color: AppColors.of(context).textSecondary,
-                      ),
+                  ),
+                  const SizedBox(height: AppSizes.gapForm),
+                  Text(
+                    AppStrings.subtitleAdd,
+                    style: AppTextStyles.h3.copyWith(
+                      color: AppColors.of(context).textSecondary,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
