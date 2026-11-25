@@ -4,6 +4,10 @@ class AppSizes {
   static const double paddingBottomPage = 0;
   static const double paddingBottomPageDetails = 30;
 
+  // DIALOG
+  static const double paddingDialog = 30;
+  static const double gapDialog = 10;
+
   // LOGIN
   static const double heightBox = 440;
   static const double widthBox = 333;
