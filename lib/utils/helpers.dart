@@ -93,6 +93,11 @@ class AppSizes {
 
   // ADD
   static const double gapForm = 20;
+  static const double gapDate = 20;
+  static const double gapLabelForm = 10;
+  static const double gapButtonForm = 5;
+  static const double paddingHorizontalDate = 16;
+  static const double paddingVerticalDate = 14;
 
   // BUTTON
   static const double widthButton = 135;
