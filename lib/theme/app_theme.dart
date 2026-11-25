@@ -44,6 +44,7 @@ class AppTheme {
         hintStyle: AppTextStyles.body.copyWith(color: p.textSecondary),
         filled: true,
         fillColor: p.surface,
+        suffixStyle: AppTextStyles.body.copyWith(color: p.textPrimary),
         prefixIconColor: p.textSecondary,
         suffixIconColor: p.textSecondary,
         enabledBorder: OutlineInputBorder(
@@ -77,9 +78,8 @@ class AppTheme {
         thumbColor: p.primary,
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: p.border, 
-        circularTrackColor:
-            p.disabled 
+        color: p.border,
+        circularTrackColor: p.disabled,
       ),
     );
   }
