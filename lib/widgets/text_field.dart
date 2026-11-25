@@ -8,6 +8,7 @@ class AppTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String labelText;
   final String hintText;
+  final String? suffixText;
   final bool isPassword;
   final bool isRequired;
   final bool showLabel;
@@ -19,6 +20,7 @@ class AppTextField extends StatefulWidget {
     this.controller,
     required this.labelText,
     required this.hintText,
+    this.suffixText,
     this.isPassword = false,
     this.isRequired = false,
     this.showLabel = true,
