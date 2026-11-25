@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/models/country_info.dart';
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/weather.dart';
+import 'package:giachero_gaia_yologo/screens/add_trip_screen.dart';
 import 'package:giachero_gaia_yologo/services/country_service.dart';
+import 'package:giachero_gaia_yologo/services/trip_service.dart';
 import 'package:giachero_gaia_yologo/services/weather_service.dart';
 import 'package:giachero_gaia_yologo/theme/app_colors.dart';
 import 'package:giachero_gaia_yologo/theme/app_text_styles.dart';
@@ -17,6 +19,7 @@ class TripDetailScreen extends StatefulWidget {
   final VoidCallback? onToggleFavorite;
   final bool isOwner;
   final VoidCallback? onEditTap;
+  final String? userId;
 
   const TripDetailScreen({
     required this.trip,
@@ -24,6 +27,7 @@ class TripDetailScreen extends StatefulWidget {
     this.onToggleFavorite,
     this.isOwner = false,
     this.onEditTap,
+    this.userId,
     super.key,
   });
 
@@ -37,14 +41,17 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   WeatherResult? _weatherResult;
   bool _isLoadingExtras = true;
 
+  late Trip _trip;
+  bool _wasUpdated = false;
+
   Future<void> _loadDetails() async {
     final resultCountry = await CountryService.getCountryInfoForCity(
-      widget.trip.city,
+      _trip.city,
     );
     final resultWeather = await WeatherService.getWeatherForTrip(
-      city: widget.trip.city,
-      departureDate: widget.trip.departureDate,
-      returnDate: widget.trip.returnDate,
+      city: _trip.city,
+      departureDate: _trip.departureDate,
+      returnDate: _trip.returnDate,
     );
     if (!mounted) return;
     setState(() {
@@ -58,7 +65,38 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   void initState() {
     super.initState();
     _isFavorite = widget.isFavorite;
+    _trip = widget.trip;
     _loadDetails();
+  }
+
+  Future<void> _openEditScreen() async {
+    final userId = widget.userId;
+    if (userId == null) return;
+
+    final result = await Navigator.of(context).push<EditTripResult>(
+      MaterialPageRoute(
+        builder: (_) => AddTripScreen(userId: userId, trip: _trip),
+      ),
+    );
+
+    if (!mounted) return;
+
+    switch (result) {
+      case EditTripResult.deleted:
+        Navigator.of(context).pop(EditTripResult.deleted);
+      case EditTripResult.updated:
+        final updatedTrip = await TripService.fetchTripsById(_trip.id);
+        if (updatedTrip != null && mounted) {
+          setState(() {
+            _trip = updatedTrip;
+            _wasUpdated = true;
+            _isLoadingExtras = true;
+          });
+          _loadDetails();
+        }
+      case null:
+        break;
+    }
   }
 
   @override
@@ -80,7 +118,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
         leading: Padding(
           padding: const EdgeInsets.only(left: AppSizes.paddingHorizontalPage),
           child: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () =>
+                Navigator.of(context)
+                    .pop(_wasUpdated ? EditTripResult.updated : null),
             icon: const Icon(Icons.arrow_back_ios),
           ),
         ),
@@ -92,7 +132,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             IconButton(
               icon: const Icon(Icons.edit_outlined),
               color: AppColors.of(context).textPrimary,
-              onPressed: widget.onEditTap,
+              onPressed: _openEditScreen,
             )
           else if (widget.onToggleFavorite != null)
             IconButton(
@@ -124,7 +164,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(AppSizes.imageRadiusDetail),
               child: Image.network(
-                widget.trip.imageUrl ?? '',
+                _trip.imageUrl ?? '',
                 fit: BoxFit.cover,
                 height: AppSizes.heightImgDetails,
                 width: AppSizes.widthImgDetails,
@@ -140,7 +180,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             ),
             const SizedBox(height: AppSizes.gapDetails),
             Text(
-              widget.trip.title,
+              _trip.title,
               style: AppTextStyles.h1.copyWith(
                 color: AppColors.of(context).textPrimary,
               ),
@@ -149,7 +189,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             Row(
               children: [
                 Text(
-                  widget.trip.city,
+                  _trip.city,
                   style: AppTextStyles.h2.copyWith(
                     color: AppColors.of(context).textSecondary,
                   ),
@@ -165,7 +205,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             ),
             const SizedBox(height: AppSizes.gapDetailsText),
             Text(
-              '${widget.trip.type.label} • Persone: 1',
+              '${_trip.type.label} • Persone: 1',
               style: AppTextStyles.body.copyWith(
                 color: AppColors.of(context).textSecondary,
               ),
@@ -186,8 +226,8 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   padding: EdgeInsets.all(AppSizes.paddingSection),
                   child: Text(
                     DateFormatter.formatRangeDetails(
-                      widget.trip.departureDate,
-                      widget.trip.returnDate,
+                      _trip.departureDate,
+                      _trip.returnDate,
                     ),
                     style: AppTextStyles.h2.copyWith(
                       color: AppColors.of(context).textSecondary,
@@ -206,7 +246,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   ),
                   padding: EdgeInsets.all(AppSizes.paddingSection),
                   child: Text(
-                    '${widget.trip.price} €',
+                    '${_trip.price} €',
                     style: AppTextStyles.h2.copyWith(
                       color: AppColors.of(context).accent,
                     ),
@@ -215,7 +255,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               ],
             ),
             const SizedBox(height: AppSizes.gapDetails),
-            if (widget.trip.descriptionTitle.isNotEmpty)
+            if (_trip.description.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -227,7 +267,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   ),
                   const SizedBox(height: AppSizes.gapDetailsDescription),
                   Text(
-                    widget.trip.descriptionTitle,
+                    _trip.description,
                     style: AppTextStyles.bodyLarge.copyWith(
                       color: AppColors.of(context).textSecondary,
                     ),
@@ -298,7 +338,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                         ),
                         const SizedBox(height: AppSizes.gapDetailsText),
                         Text(
-                          widget.trip.city,
+                          _trip.city,
                           style: AppTextStyles.label.copyWith(
                             color: AppColors.of(context).textSecondary,
                           ),
