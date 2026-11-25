@@ -66,6 +66,15 @@ class AppStrings {
   static const String titleAdd = 'Crea viaggio';
   static const String subtitleAdd = 'Crea la tua prossima proposta last-minute.';
 
+  // Modify trip
+  static const String titleEdit = 'Modifica viaggio';
+  static const String confirmNoChange = 'Confermi di voler annullare le modifiche?';
+  static const String confirmDelete = 'Confermi di voler eliminare il viaggio?';
+  static const String errorModify = 'Errore durante il salvataggio delle modifiche';
+  static const String errorDelete = 'Errore durante l\'eliminazione del viaggio';
+  static const String successModify = 'Viaggio modificato con successo!';
+  static const String successDelete = 'Viaggio eliminato con successo!';
+
   // Label AddTrip
   static const String titleTrip = 'Titolo viaggio';
   static const String cityTrip = 'Città di destinazione';
