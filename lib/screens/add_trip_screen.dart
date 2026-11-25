@@ -8,17 +8,24 @@ import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
 import 'package:giachero_gaia_yologo/utils/helpers.dart';
 import 'package:giachero_gaia_yologo/utils/validators.dart';
 import 'package:giachero_gaia_yologo/widgets/app_button.dart';
+import 'package:giachero_gaia_yologo/widgets/status_dialog.dart';
 import 'package:giachero_gaia_yologo/widgets/status_message.dart';
 import 'package:giachero_gaia_yologo/widgets/text_field.dart';
 import 'package:giachero_gaia_yologo/widgets/trip_type_chip.dart';
+import 'package:giachero_gaia_yologo/widgets/confirm_dialog.dart';
+import 'package:giachero_gaia_yologo/models/trip.dart';
+
+enum EditTripResult { updated, deleted }
 
 class AddTripScreen extends StatefulWidget {
   final String userId;
-  final VoidCallback onGoToMyTrips;
+  final VoidCallback? onGoToMyTrips;
+  final Trip? trip;
 
   const AddTripScreen({
     required this.userId,
-    required this.onGoToMyTrips,
+    this.onGoToMyTrips,
+    this.trip,
     super.key,
   });
 
@@ -51,6 +58,42 @@ class _AddTripScreenState extends State<AddTripScreen> {
       _returnDate != null ||
       _selectedType != null;
 
+  bool get _isModify => widget.trip != null;
+
+  bool _sameDay(DateTime? a, DateTime? b) {
+    if (a == null || b == null) return a == b;
+    return DateFormatter.formatForDatabase(a) ==
+        DateFormatter.formatForDatabase(b);
+  }
+
+  bool get _hasChanges {
+    final trip = widget.trip;
+    if (trip == null) return _hasAnyInput;
+
+    return _titleController.text.trim() != trip.title.trim() ||
+        _destinationController.text.trim() != trip.city.trim() ||
+        int.tryParse(_priceController.text.trim()) != trip.price ||
+        _descriptionController.text.trim() != trip.description.trim() ||
+        !_sameDay(_departureDate, trip.departureDate) ||
+        !_sameDay(_returnDate, trip.returnDate) ||
+        _selectedType != trip.type;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final trip = widget.trip;
+    if (trip != null) {
+      _titleController.text = trip.title;
+      _destinationController.text = trip.city;
+      _priceController.text = trip.price.toString();
+      _descriptionController.text = trip.description;
+      _departureDate = trip.departureDate;
+      _returnDate = trip.returnDate;
+      _selectedType = trip.type;
+    }
+  }
+
   void _resetForm() {
     FocusScope.of(context).unfocus();
     _titleController.clear();
@@ -66,6 +109,62 @@ class _AddTripScreenState extends State<AddTripScreen> {
     });
   }
 
+  Future<void> _onCancelTap() async {
+    if (!_hasChanges) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    final confirm = await ConfirmDialog.show(
+      context,
+      message: AppStrings.confirmNoChange,
+      confirmLabel: AppStrings.confirmButton,
+      confirmVariant: AppButtonVariant.primary,
+    );
+
+    if (confirm == true && mounted) Navigator.of(context).pop();
+  }
+
+  Future<void> _onDeleteTap() async {
+    final confirm = await ConfirmDialog.show(
+      context,
+      message: AppStrings.confirmDelete,
+      confirmLabel: AppStrings.deleteButton,
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      await TripService.deleteTrip(widget.trip!.id);
+      if (!mounted) return;
+      await StatusDialog.show(context, message: AppStrings.successDelete);
+      if (mounted) {
+        Navigator.of(context).pop(EditTripResult.deleted);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      final retry = await ConfirmDialog.show(
+        context,
+        message: AppStrings.errorDelete,
+        confirmLabel: AppStrings.errorButton,
+        confirmVariant: AppButtonVariant.primary,
+      );
+      if (retry == true) {
+        await _onDeleteTap();
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -73,58 +172,6 @@ class _AddTripScreenState extends State<AddTripScreen> {
     _priceController.dispose();
     _descriptionController.dispose();
     super.dispose();
-  }
-
-  Future<void> _showErrorDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return Dialog(
-          backgroundColor: AppColors.of(context).surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.searchRadius),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.paddingHorizontalPage),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  AppStrings.addError,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.h3.copyWith(
-                    color: AppColors.of(context).textPrimary,
-                  ),
-                ),
-                const SizedBox(height: AppSizes.gapForm),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        labelButton: AppStrings.cancelButton,
-                        onTap: () => Navigator.of(dialogContext).pop(),
-                      ),
-                    ),
-                    const SizedBox(width: AppSizes.gapDate),
-                    Expanded(
-                      child: AppButton(
-                        labelButton: AppStrings.deleteButton,
-                        variant: AppButtonVariant.red,
-                        onTap: () {
-                          Navigator.of(dialogContext).pop();
-                          _resetForm();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Future<void> _submit() async {
@@ -153,22 +200,59 @@ class _AddTripScreenState extends State<AddTripScreen> {
     });
 
     try {
-      await TripService.createTrip(
-        ownerId: widget.userId,
-        title: _titleController.text.trim(),
-        city: _destinationController.text.trim(),
-        startDate: departureDate,
-        endDate: returnDate,
-        price: int.parse(_priceController.text.trim()),
-        type: selectedType,
-        description: _descriptionController.text.trim(),
-      );
-      _resetForm();
-      setState(() {
-        _isSuccess = true;
-      });
+      if (_isModify) {
+        await TripService.updateTrip(
+          original: widget.trip!,
+          title: _titleController.text.trim(),
+          city: _destinationController.text.trim(),
+          startDate: departureDate,
+          endDate: returnDate,
+          price: int.parse(_priceController.text.trim()),
+          type: selectedType,
+          description: _descriptionController.text.trim(),
+        );
+        if (!mounted) return;
+        await StatusDialog.show(context, message: AppStrings.successModify);
+        if (mounted) {
+          Navigator.of(context).pop(EditTripResult.updated);
+        }
+      } else {
+        await TripService.createTrip(
+          ownerId: widget.userId,
+          title: _titleController.text.trim(),
+          city: _destinationController.text.trim(),
+          startDate: departureDate,
+          endDate: returnDate,
+          price: int.parse(_priceController.text.trim()),
+          type: selectedType,
+          description: _descriptionController.text.trim(),
+        );
+        _resetForm();
+        setState(() {
+          _isSuccess = true;
+        });
+      }
     } catch (e) {
-      if (mounted) await _showErrorDialog();
+      if (!mounted) return;
+
+      if (!_isModify) {
+        final shouldReset = await ConfirmDialog.show(
+          context,
+          message: AppStrings.addError,
+          confirmLabel: AppStrings.deleteButton,
+        );
+
+        if (shouldReset == true) _resetForm();
+      } else {
+        final retry = await ConfirmDialog.show(
+          context,
+          message: AppStrings.errorModify,
+          confirmLabel: AppStrings.errorButton,
+          confirmVariant: AppButtonVariant.primary,
+        );
+
+        if (retry == true) await _submit();
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -177,69 +261,90 @@ class _AddTripScreenState extends State<AddTripScreen> {
       }
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSizes.paddingHorizontalPage,
-                AppSizes.paddingTopPage,
-                AppSizes.paddingHorizontalPage,
-                AppSizes.paddingBottomPage,
-              ),
-              child: _isSuccess
-                  ? Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
+        child: _isSuccess
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.paddingHorizontalPage,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      StatusMessage(message: AppStrings.addSuccess),
+                      const SizedBox(height: AppSizes.gapForm),
+                      AppButton(
+                        labelButton: AppStrings.myTripButton,
+                        variant: AppButtonVariant.green,
+                        onTap: () {
+                          setState(() {
+                            _isSuccess = false;
+                          });
+                          widget.onGoToMyTrips?.call();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSizes.paddingHorizontalPage,
+                      AppSizes.paddingTopPage,
+                      AppSizes.paddingHorizontalPage,
+                      AppSizes.paddingBottomPage,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (_isModify)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  AppStrings.titleEdit,
+                                  style: AppTextStyles.display.copyWith(
+                                    color: AppColors.of(context).textPrimary,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: _isSubmitting ? null : _onDeleteTap,
+                                icon: const Icon(Icons.delete_outline),
+                                color: AppColors.of(context).textPrimary,
+                              ),
+                            ],
+                          )
+                        else ...[
                           Text(
                             AppStrings.titleAdd,
                             style: AppTextStyles.display.copyWith(
                               color: AppColors.of(context).textPrimary,
                             ),
                           ),
-                          const SizedBox(height: AppSizes.gapForm * 2),
-                          StatusMessage(message: AppStrings.addSuccess),
                           const SizedBox(height: AppSizes.gapForm),
-                          AppButton(
-                            labelButton: AppStrings.myTripButton,
-                            variant: AppButtonVariant.green,
-                            onTap: () {
-                              setState(() {
-                                _isSuccess = false;
-                              });
-                              widget.onGoToMyTrips();
-                            },
+                          Text(
+                            AppStrings.subtitleAdd,
+                            style: AppTextStyles.h3.copyWith(
+                              color: AppColors.of(context).textSecondary,
+                            ),
                           ),
                         ],
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          AppStrings.titleAdd,
-                          style: AppTextStyles.display.copyWith(
-                            color: AppColors.of(context).textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: AppSizes.gapForm),
-                        Text(
-                          AppStrings.subtitleAdd,
-                          style: AppTextStyles.h3.copyWith(
-                            color: AppColors.of(context).textSecondary,
-                          ),
-                        ),
                         const SizedBox(height: AppSizes.gapForm),
                         AppTextField(
                           labelText: AppStrings.titleTrip,
                           hintText: AppStrings.hintTitleTrip,
                           isRequired: true,
+                          enabled: !_isSubmitting,
                           controller: _titleController,
                           validator: Validators.notEmpty,
                           onChanged: (_) => setState(() {}),
@@ -249,6 +354,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
                           labelText: AppStrings.cityTrip,
                           hintText: AppStrings.hintCityTrip,
                           isRequired: true,
+                          enabled: !_isSubmitting,
                           controller: _destinationController,
                           validator: Validators.notEmpty,
                           onChanged: (_) => setState(() {}),
@@ -263,14 +369,20 @@ class _AddTripScreenState extends State<AddTripScreen> {
                                 selectedDate: _departureDate,
                                 onTap: () async {
                                   final now = DateTime.now();
+                                  final today = DateTime(
+                                    now.year,
+                                    now.month,
+                                    now.day,
+                                  );
+                                  final current = _departureDate;
                                   final picked = await showDatePicker(
                                     context: context,
-                                    initialDate: _departureDate ?? now,
-                                    firstDate: DateTime(
-                                      now.year,
-                                      now.month,
-                                      now.day,
-                                    ),
+                                    initialDate:
+                                        (current != null &&
+                                            !current.isBefore(today))
+                                        ? current
+                                        : today,
+                                    firstDate: today,
                                     lastDate: DateTime(now.year + 5),
                                   );
                                   if (picked != null) {
@@ -338,6 +450,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
                           hintText: AppStrings.hintPriceTrip,
                           controller: _priceController,
                           isRequired: true,
+                          enabled: !_isSubmitting,
                           validator: Validators.price,
                           suffixText: '€',
                           onChanged: (_) => setState(() {}),
@@ -372,8 +485,11 @@ class _AddTripScreenState extends State<AddTripScreen> {
                                   type: type,
                                   isSelected: _selectedType == type,
                                   onTap: (selected) {
+                                    if (_isSubmitting) return;
                                     setState(() {
-                                      _selectedType = selected ? type : null;
+                                      _selectedType = (selected || _isModify)
+                                          ? type
+                                          : null;
                                     });
                                   },
                                 ),
@@ -396,29 +512,46 @@ class _AddTripScreenState extends State<AddTripScreen> {
                           hintText: AppStrings.hintDescriptionTrip,
                           controller: _descriptionController,
                           isRequired: true,
+                          enabled: !_isSubmitting,
                           maxLines: 5,
                           validator: Validators.notEmpty,
                           onChanged: (_) => setState(() {}),
                         ),
                         const SizedBox(height: AppSizes.gapForm),
-                        AppButton(
-                          labelButton: AppStrings.addTripButton,
-                          isLoading: _isSubmitting,
-                          onTap: _isSubmitting ? null : _submit,
-                        ),
-                        if (_hasAnyInput) ...[
-                          const SizedBox(height: AppSizes.gapButtonForm),
+                        if (_isModify) ...[
+                          if (_hasChanges) ...[
+                            AppButton(
+                              labelButton: AppStrings.saveButton,
+                              isLoading: _isSubmitting,
+                              onTap: _isSubmitting ? null : _submit,
+                            ),
+                            const SizedBox(height: AppSizes.gapButtonForm),
+                          ],
                           AppButton(
-                            labelButton: AppStrings.deleteButton,
-                            variant: AppButtonVariant.red,
-                            onTap: _isSubmitting ? null : _resetForm,
+                            labelButton: AppStrings.cancelButton,
+                            variant: AppButtonVariant.secondary,
+                            onTap: _isSubmitting ? null : _onCancelTap,
                           ),
+                        ] else ...[
+                          AppButton(
+                            labelButton: AppStrings.addTripButton,
+                            isLoading: _isSubmitting,
+                            onTap: _isSubmitting ? null : _submit,
+                          ),
+                          if (_hasAnyInput) ...[
+                            const SizedBox(height: AppSizes.gapButtonForm),
+                            AppButton(
+                              labelButton: AppStrings.deleteButton,
+                              variant: AppButtonVariant.red,
+                              onTap: _isSubmitting ? null : _resetForm,
+                            ),
+                          ],
                         ],
                       ],
                     ),
-            ),
-          ),
-        ),
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -440,7 +573,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
         ),
         const SizedBox(height: AppSizes.fieldLabelGap),
         GestureDetector(
-          onTap: onTap,
+          onTap: _isSubmitting ? null : onTap,
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
