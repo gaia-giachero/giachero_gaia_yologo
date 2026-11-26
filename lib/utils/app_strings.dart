@@ -68,7 +68,7 @@ class AppStrings {
 
   // Weather
   static const String tooFarInFuture =
-      'Previsioni disponibili solo entro 16 giorni dalla partenza';
+      'Previsioni non ancora disponibili';
   static const String pastTrip =
       'Viaggio già concluso: previsioni non disponibili';
   static const String unavailable =

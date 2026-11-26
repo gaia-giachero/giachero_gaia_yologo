@@ -55,6 +55,14 @@ class AppSizes {
   static const double flagHeight = 20;
   static const double flagRadius = 20;
 
+  // WEATHER CARD
+  static const double weatherListHeight = 124;
+  static const double weatherCardWidth = 100;
+  static const double paddingWeatherCardHorizontal = 12;
+  static const double paddingWeatherCardVertical = 10;
+  static const double gapWeatherIcon = 6;
+  static const double gapWeatherTemp = 4;
+
   // CARD 
   static const double cardImageHeightHorizontal = 200;
   static const double cardImageWidthHorizontal = 250;
