@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:giachero_gaia_yologo/config/api_config.dart';
+import 'package:giachero_gaia_yologo/config/unsplash_config.dart';
 import 'package:giachero_gaia_yologo/models/trip_type.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,7 +31,7 @@ class UnsplashService {
           .get(
             uri,
             headers: {
-              'Authorization': 'Client-ID ${ApiConfig.unsplashAccessKey}',
+              'Authorization': 'Client-ID ${UnsplashConfig.unsplashAccessKey}',
               'Accept-Version': 'v1',
             },
           )
