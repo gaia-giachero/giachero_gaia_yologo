@@ -161,6 +161,7 @@ class _SettingScreenState extends State<SettingsScreen> {
                         username: newUsername,
                         bio: newBio.isEmpty ? null : newBio,
                       );
+                      if (!context.mounted) return;
                       Navigator.pop(context, updatedUser);
                     }
                   },

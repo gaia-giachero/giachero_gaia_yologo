@@ -61,11 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       debugPrint('Errore: $e');
     } finally {
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-      });
+      if (!mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
+    return;
   }
 
   List<Trip> get _upcomingTrips {

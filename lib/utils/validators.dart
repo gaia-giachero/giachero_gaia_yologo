@@ -18,8 +18,9 @@ class Validators {
   }
 
   static String? returnDate(DateTime? departure, DateTime? returnDate) {
-    if (departure == null || returnDate == null)
+    if (departure == null || returnDate == null) {
       return AppStrings.requiredField;
+    }
 
     if (returnDate.isBefore(departure)) return AppStrings.returnBeforeDeparture;
 
