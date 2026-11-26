@@ -2,8 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-/// Mappamondo neon che ruota, con un aereo che gli orbita attorno.
-/// [spin] e [orbit] vanno da 0 a 1 e li decide chi lo usa (animazione).
 class AnimatedGlobe extends StatelessWidget {
   static const double aspectRatio = 0.72;
 
@@ -30,7 +28,7 @@ class AnimatedGlobe extends StatelessWidget {
 typedef _Projection = ({Offset point, double depth});
 
 class _GlobePainter extends CustomPainter {
-  // Colori neon
+  // Neon colors
   static const Color _cyan = Color(0xFF3DF0E6);
   static const Color _blue = Color(0xFF3C8CFF);
   static const Color _orange = Color(0xFFFFA23A);
@@ -38,7 +36,7 @@ class _GlobePainter extends CustomPainter {
   static const Color _globeLight = Color(0xFF17356A);
   static const Color _globeDark = Color(0xFF081226);
 
-  // Proporzioni (il riferimento è il raggio del mappamondo)
+  // Scale
   static const double _radiusFactor = 0.30;
   static const double _orbitA = 1.55;
   static const double _orbitB = 0.5;
@@ -60,12 +58,12 @@ class _GlobePainter extends CustomPainter {
   static const double _backAlpha = 0.35;
   static const double _backTrailAlpha = 0.45;
 
-  // Alone luminoso dei tratti
+  // Shadow
   static const double _glowWidth = 3;
   static const double _glowAlpha = 0.45;
   static const double _glowBlur = 1.6;
 
-  // Campionamento e scia
+  // Wake
   static const double _gridStep = 30;
   static const double _sampleStep = 6;
   static const double _orbitStep = 0.06;
@@ -74,9 +72,8 @@ class _GlobePainter extends CustomPainter {
   static const double _planeAhead = 0.02;
   static const double _trailMinWidth = 0.4;
 
-  // Continenti semplificati: (longitudine, latitudine)
   static const List<List<(num, num)>> _continents = [
-    // Nord America
+    // North America
     [
       (-168, 65),
       (-156, 71),
@@ -120,7 +117,7 @@ class _GlobePainter extends CustomPainter {
       (-165, 60),
       (-168, 65),
     ],
-    // Groenlandia
+    // Greenland
     [
       (-73, 78),
       (-60, 82),
@@ -133,7 +130,7 @@ class _GlobePainter extends CustomPainter {
       (-58, 75),
       (-73, 78),
     ],
-    // Sud America
+    // South America
     [
       (-80, 9),
       (-75, 11),
@@ -163,7 +160,7 @@ class _GlobePainter extends CustomPainter {
       (-78, 3),
       (-80, 9),
     ],
-    // Europa e Asia
+    // Europe and Asia
     [
       (-9, 37),
       (-9, 43),
@@ -287,7 +284,7 @@ class _GlobePainter extends CustomPainter {
     ],
   ];
 
-  // Sagoma dell'aereo, rivolta verso destra
+  // Plane
   static final Path _plane = _buildPlane();
 
   static Path _buildPlane() {
@@ -334,8 +331,7 @@ class _GlobePainter extends CustomPainter {
     _drawOrbit(canvas, center, radius, front: true);
   }
 
-  // ---------- Globo ----------
-
+  // Globe
   void _drawGlobe(Canvas canvas, Offset c, double r) {
     final rect = Rect.fromCircle(center: c, radius: r);
 
@@ -384,8 +380,6 @@ class _GlobePainter extends CustomPainter {
     _strokeGlow(canvas, Path()..addOval(rect), _cyan, r * _outlineWidth);
   }
 
-  /// Proietta un punto (latitudine, longitudine) sul disco visibile.
-  /// depth > 0 significa che il punto è sul lato rivolto verso chi guarda.
   _Projection _project(Offset c, double r, num latDeg, num lonDeg) {
     final lat = latDeg * math.pi / 180;
     final lon = lonDeg * math.pi / 180 + spin * 2 * math.pi;
@@ -397,7 +391,6 @@ class _GlobePainter extends CustomPainter {
     return (point: Offset(c.dx + r * x1, c.dy - r * y1), depth: z);
   }
 
-  /// Aggiunge al percorso solo i tratti sul lato visibile.
   void _addVisible(Path path, List<_Projection> points) {
     var drawing = false;
     for (final p in points) {
@@ -414,8 +407,7 @@ class _GlobePainter extends CustomPainter {
     }
   }
 
-  // ---------- Orbita, scia e aereo ----------
-
+  // Orbit, trail, and plane
   Offset _orbitPoint(Offset c, double r, double theta) {
     final x = _orbitA * r * math.cos(theta);
     final y = _orbitB * r * math.sin(theta);
@@ -436,8 +428,6 @@ class _GlobePainter extends CustomPainter {
     return path;
   }
 
-  /// Disegna la metà dell'orbita davanti (front) o dietro al globo,
-  /// con la scia e l'aereo se si trovano su quella metà.
   void _drawOrbit(Canvas canvas, Offset c, double r, {required bool front}) {
     final start = front ? 0.0 : math.pi;
     _strokeGlow(
@@ -495,8 +485,7 @@ class _GlobePainter extends CustomPainter {
     canvas.restore();
   }
 
-  // ---------- Utilità ----------
-
+  // Utilities
   void _strokeGlow(Canvas canvas, Path path, Color color, double width) {
     canvas.drawPath(
       path,
