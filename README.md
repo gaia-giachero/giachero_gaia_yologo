@@ -15,13 +15,13 @@ App Flutter per scoprire e proporre viaggi last-minute. Ogni utente può esplora
 
 ## API e servizi usati
 
-| Servizio | Endpoint | Uso |
-|---|---|---|
-| Unsplash | `api.unsplash.com/search/photos` | immagine di copertina per città |
-| Open-Meteo Geocoding | `geocoding-api.open-meteo.com/v1/search` | coordinate e codice paese della città |
-| Open-Meteo Forecast | `api.open-meteo.com/v1/forecast` | previsioni giornaliere per le date del viaggio |
-| REST Countries | `www.apicountries.com/alpha/{codice}` | dati del paese (lingua, valuta, ...) |
-| Supabase | tabelle `trips`, `favorites`, `profiles`, `popular_destinations` | autenticazione e dati dell'app |
+| Servizio             | Endpoint                                                         | Uso                                            |
+| -------------------- | ---------------------------------------------------------------- | ---------------------------------------------- |
+| Unsplash             | `api.unsplash.com/search/photos`                                 | immagine di copertina per città                |
+| Open-Meteo Geocoding | `geocoding-api.open-meteo.com/v1/search`                         | coordinate e codice paese della città          |
+| Open-Meteo Forecast  | `api.open-meteo.com/v1/forecast`                                 | previsioni giornaliere per le date del viaggio |
+| REST Countries       | `www.apicountries.com/alpha/{codice}`                            | dati del paese (lingua, valuta, ...)           |
+| Supabase             | tabelle `trips`, `favorites`, `profiles`, `popular_destinations` | autenticazione e dati dell'app                 |
 
 Le chiamate HTTP usano il pacchetto `http`. Loading, errore e "riprova" sono gestiti nei flussi di rete (lista Esplora, Home, Preferiti, Profilo, Dettaglio).
 
