@@ -103,11 +103,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   Widget build(BuildContext context) {
     final country = _countryInfo;
     final weatherResult = _weatherResult;
-    final firstDayWeather =
+    final forecasts =
         weatherResult != null &&
             weatherResult.status == WeatherStatus.available &&
             weatherResult.forecasts.isNotEmpty
-        ? weatherResult.forecasts.first
+        ? weatherResult.forecasts
         : null;
 
     return Scaffold(
@@ -390,42 +390,52 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             const SizedBox(height: AppSizes.gapDetailsDescription),
             if (_isLoadingExtras)
               const Center(child: CircularProgressIndicator())
-            else if (firstDayWeather != null)
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.of(context).border,
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(AppSizes.sectionRadius),
-                  color: AppColors.of(context).surface,
-                ),
-                padding: EdgeInsets.all(AppSizes.paddingSection),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      firstDayWeather.icon,
-                      color: AppColors.of(context).primary,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${firstDayWeather.minTemp.round()}° / ${firstDayWeather.maxTemp.round()} °C',
-                          style: AppTextStyles.h4.copyWith(
-                            color: AppColors.of(context).textPrimary,
-                          ),
+            else if (forecasts != null)
+              SizedBox(
+                height: 115,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: forecasts.length,
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: AppSizes.gapDate),
+                  itemBuilder: (context, index) {
+                    final day = forecasts[index];
+                    return Container(
+                      width: 100,
+                      padding: EdgeInsets.all(AppSizes.paddingSection),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.of(context).border,
+                          width: 1,
                         ),
-                        Text(
-                          firstDayWeather.description,
-                          style: AppTextStyles.body.copyWith(
-                            color: AppColors.of(context).textSecondary,
-                          ),
+                        borderRadius: BorderRadius.circular(
+                          AppSizes.sectionRadius,
                         ),
-                      ],
-                    ),
-                  ],
+                        color: AppColors.of(context).surface,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(day.icon, color: AppColors.of(context).primary),
+                          const SizedBox(height: 6),
+                          Text(
+                            DateFormatter.formatShortDay(day.date),
+                            style: AppTextStyles.label.copyWith(
+                              color: AppColors.of(context).textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${day.minTemp.round()}° / ${day.maxTemp.round()}°',
+                            style: AppTextStyles.body.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.of(context).textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               )
             else

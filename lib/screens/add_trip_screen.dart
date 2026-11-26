@@ -79,6 +79,19 @@ class _AddTripScreenState extends State<AddTripScreen> {
         _selectedType != trip.type;
   }
 
+  bool get _isFormCompleteAndValid =>
+      Validators.notEmpty(_titleController.text) == null &&
+      Validators.notEmpty(_destinationController.text) == null &&
+      Validators.price(_priceController.text) == null &&
+      Validators.notEmpty(_descriptionController.text) == null &&
+      _departureDate != null &&
+      _returnDate != null &&
+      Validators.returnDate(_departureDate, _returnDate) == null &&
+      _selectedType != null;
+
+  bool get _canSubmit =>
+      !_isSubmitting && _isFormCompleteAndValid && (!_isModify || _hasChanges);
+
   @override
   void initState() {
     super.initState();
@@ -261,7 +274,6 @@ class _AddTripScreenState extends State<AddTripScreen> {
       }
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -296,6 +308,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
             : SingleChildScrollView(
                 child: Form(
                   key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppSizes.paddingHorizontalPage,
@@ -523,7 +536,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
                             AppButton(
                               labelButton: AppStrings.saveButton,
                               isLoading: _isSubmitting,
-                              onTap: _isSubmitting ? null : _submit,
+                              onTap: _canSubmit ? _submit : null,
                             ),
                             const SizedBox(height: AppSizes.gapButtonForm),
                           ],
@@ -536,7 +549,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
                           AppButton(
                             labelButton: AppStrings.addTripButton,
                             isLoading: _isSubmitting,
-                            onTap: _isSubmitting ? null : _submit,
+                            onTap: _canSubmit ? _submit : null,
                           ),
                           if (_hasAnyInput) ...[
                             const SizedBox(height: AppSizes.gapButtonForm),

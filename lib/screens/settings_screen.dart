@@ -46,6 +46,19 @@ class _SettingScreenState extends State<SettingsScreen> {
     Navigator.pop(context);
   }
 
+  bool get _hasChanges {
+    final currentUsername = _usernameController.text.trim();
+    final currentBio = _bioController.text.trim();
+    final initialBio = (widget.user.bio ?? '').trim();
+
+    return currentUsername != widget.user.username ||
+        currentBio != initialBio ||
+        themeNotifier.value != _initialTheme;
+  }
+
+  bool get _canSave =>
+      _hasChanges && _usernameController.text.trim().isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     final username = _usernameController.text;
@@ -107,6 +120,7 @@ class _SettingScreenState extends State<SettingsScreen> {
                   hintText: bio,
                   showLabel: false,
                   maxLines: 4,
+                  onChanged: (_) => setState(() {})
                 ),
                 SizedBox(height: AppSizes.gapSettings),
                 const Divider(),
@@ -138,7 +152,7 @@ class _SettingScreenState extends State<SettingsScreen> {
                 SizedBox(height: AppSizes.gapSettings),
                 AppButton(
                   labelButton: AppStrings.saveSettings,
-                  onTap: () async {
+                  onTap: _canSave ? () async {
                     final newUsername = _usernameController.text.trim();
                     final newBio = _bioController.text.trim();
 
@@ -164,14 +178,17 @@ class _SettingScreenState extends State<SettingsScreen> {
                       if (!context.mounted) return;
                       Navigator.pop(context, updatedUser);
                     }
-                  },
+                  } : null,
                 ),
                 SizedBox(height: AppSizes.gapButton),
-                AppButton(
-                  labelButton: AppStrings.cancelButton,
-                  variant: AppButtonVariant.secondary,
-                  onTap: _cancelAndPop,
-                ),
+                if (_hasChanges) ...[
+                  SizedBox(height: AppSizes.gapButton),
+                  AppButton(
+                    labelButton: AppStrings.cancelButton,
+                    variant: AppButtonVariant.secondary,
+                    onTap: _cancelAndPop,
+                  ),
+                ],
                 SizedBox(height: AppSizes.gapSettings),
                 const Divider(),
                 SizedBox(height: AppSizes.gapSettings),

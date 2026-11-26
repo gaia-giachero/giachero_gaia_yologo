@@ -29,18 +29,28 @@ class SearchFilterBar extends StatelessWidget {
             color: AppColors.of(context).textPrimary,
           ),
           controller: controller,
-          decoration: InputDecoration(
-            hintText: AppStrings.hintText,
-          ),
+          decoration: InputDecoration(hintText: AppStrings.hintText),
         ),
         const SizedBox(height: 15),
         Row(
           children: [
             Expanded(
-              child: FilledButton(
-                onPressed: onSearchTap,
-                child: Text(AppStrings.searchButton),
-              ),
+              child: controller != null
+                  ? ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: controller!,
+                      builder: (context, value, _) {
+                        final canSearch =
+                            value.text.trim().isNotEmpty || hasActiveFilters;
+                        return FilledButton(
+                          onPressed: canSearch ? onSearchTap : null,
+                          child: Text(AppStrings.searchButton),
+                        );
+                      },
+                    )
+                  : FilledButton(
+                      onPressed: hasActiveFilters ? onSearchTap : null,
+                      child: Text(AppStrings.searchButton),
+                    ),
             ),
             const SizedBox(width: 10),
             IconButton(
