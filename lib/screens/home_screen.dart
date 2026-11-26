@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       debugPrint('Errore: $e');
     } finally {
-      if (!mounted) {
+      if (mounted) {
         setState(() {
           _isLoading = false;
         });
