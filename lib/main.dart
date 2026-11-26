@@ -13,11 +13,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('it_IT');
 
-  await Supabase.initialize(
-    url: SupabaseConfig.url,
-    publishableKey: SupabaseConfig.anonKey,
-  );
-
   final prefs = await SharedPreferences.getInstance();
   final bool isDark = prefs.getBool('isDarkMode') ?? false;
   themeNotifier.value = isDark ? ThemeMode.dark : ThemeMode.light;
