@@ -19,9 +19,8 @@ class CountryService {
       return Future.value(_cache[cacheKey]);
     }
 
-    if (_inFlight.containsKey(cacheKey)) {
-      return _inFlight[cacheKey]!;
-    }
+    final running = _inFlight[cacheKey];
+    if (running != null) return running;
 
     final future = _fetchCountryInfo(cleanCity, cacheKey).whenComplete(() {
       _inFlight.remove(cacheKey);
