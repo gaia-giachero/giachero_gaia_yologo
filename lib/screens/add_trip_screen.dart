@@ -139,6 +139,9 @@ class _AddTripScreenState extends State<AddTripScreen> {
   }
 
   Future<void> _onDeleteTap() async {
+    final trip = widget.trip;
+    if (trip == null) return;
+
     final confirm = await ConfirmDialog.show(
       context,
       message: AppStrings.confirmDelete,
@@ -152,7 +155,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
     });
 
     try {
-      await TripService.deleteTrip(widget.trip!.id);
+      await TripService.deleteTrip(trip.id);
       if (!mounted) return;
       await StatusDialog.show(context, message: AppStrings.successDelete);
       if (mounted) {
@@ -213,9 +216,10 @@ class _AddTripScreenState extends State<AddTripScreen> {
     });
 
     try {
-      if (_isModify) {
+      final original = widget.trip;
+      if (original != null) {
         await TripService.updateTrip(
-          original: widget.trip!,
+          original: original,
           title: _titleController.text.trim(),
           city: _destinationController.text.trim(),
           startDate: departureDate,
@@ -277,6 +281,15 @@ class _AddTripScreenState extends State<AddTripScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dateError = _showSelectionErrors
+        ? (Validators.notNull(_departureDate) ??
+              Validators.returnDate(_departureDate, _returnDate))
+        : null;
+
+    final typeError = _showSelectionErrors
+        ? Validators.notNull(_selectedType)
+        : null;
+
     return Scaffold(
       body: SafeArea(
         child: _isSuccess
@@ -399,10 +412,11 @@ class _AddTripScreenState extends State<AddTripScreen> {
                                     lastDate: DateTime(now.year + 5),
                                   );
                                   if (picked != null) {
+                                    final currentReturn = _returnDate;
                                     setState(() {
                                       _departureDate = picked;
-                                      if (_returnDate != null &&
-                                          _returnDate!.isBefore(picked)) {
+                                      if (currentReturn != null &&
+                                          currentReturn.isBefore(picked)) {
                                         _returnDate = null;
                                       }
                                     });
@@ -437,25 +451,14 @@ class _AddTripScreenState extends State<AddTripScreen> {
                             ),
                           ],
                         ),
-                        if (_showSelectionErrors) ...[
-                          if (Validators.notNull(_departureDate) != null ||
-                              Validators.returnDate(
-                                    _departureDate,
-                                    _returnDate,
-                                  ) !=
-                                  null) ...[
-                            const SizedBox(height: AppSizes.fieldLabelGap),
-                            Text(
-                              Validators.notNull(_departureDate) ??
-                                  Validators.returnDate(
-                                    _departureDate,
-                                    _returnDate,
-                                  )!,
-                              style: AppTextStyles.caption.copyWith(
-                                color: AppColors.of(context).error,
-                              ),
+                        if (dateError != null) ...[
+                          const SizedBox(height: AppSizes.fieldLabelGap),
+                          Text(
+                            dateError,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.of(context).error,
                             ),
-                          ],
+                          ),
                         ],
                         const SizedBox(height: AppSizes.gapForm),
                         AppTextField(
@@ -509,11 +512,10 @@ class _AddTripScreenState extends State<AddTripScreen> {
                             ],
                           ),
                         ),
-                        if (_showSelectionErrors &&
-                            Validators.notNull(_selectedType) != null) ...[
+                        if (typeError != null) ...[
                           const SizedBox(height: AppSizes.fieldLabelGap),
                           Text(
-                            Validators.notNull(_selectedType)!,
+                            typeError,
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.of(context).error,
                             ),
