@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/screens/auth/login_screen.dart';
+import 'package:giachero_gaia_yologo/screens/splash_screen.dart';
 import 'package:giachero_gaia_yologo/theme/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -33,7 +34,15 @@ Future<void> main() async {
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             overscroll: false,
           ),
-          home: const LoginScreen(),
+          home: SplashScreen(
+            steps: [
+              () => Supabase.initialize(
+                url: SupabaseConfig.url,
+                publishableKey: SupabaseConfig.anonKey,
+              ),
+            ],
+            next: const LoginScreen(),
+          ),
         );
       },
     ),
