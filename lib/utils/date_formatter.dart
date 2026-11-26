@@ -5,6 +5,11 @@ class DateFormatter {
     return DateFormat('yyyy-MM-dd').format(date);
   }
 
+  static String formatShortDay(DateTime? date) {
+    if (date == null) return '-';
+    return DateFormat('E d', 'it_IT').format(date).toLowerCase();
+  }
+
   static String formatta(DateTime? dataEsterna) {
     if (dataEsterna == null) return '-';
     return DateFormat('dd/MM/yy').format(dataEsterna);
@@ -30,4 +35,5 @@ class DateFormatter {
     if (date == null) return '-';
     return DateFormat('dd/MM').format(date);
   }
+
 }

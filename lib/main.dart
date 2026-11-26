@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:giachero_gaia_yologo/screens/auth/login_screen.dart';
 import 'package:giachero_gaia_yologo/theme/app_theme.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'config/supabase_config.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('it_IT');
 
   await Supabase.initialize(
     url: SupabaseConfig.url,
@@ -27,7 +30,9 @@ Future<void> main() async {
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: currentMode,
-          scrollBehavior: const MaterialScrollBehavior().copyWith(overscroll: false),
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            overscroll: false,
+          ),
           home: const LoginScreen(),
         );
       },
