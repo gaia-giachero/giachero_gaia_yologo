@@ -186,22 +186,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               ),
             ),
             const SizedBox(height: AppSizes.gapDetailsText),
-            Row(
-              children: [
-                Text(
-                  _trip.city,
-                  style: AppTextStyles.h2.copyWith(
-                    color: AppColors.of(context).textSecondary,
-                  ),
-                ),
-                if (country != null)
-                  Text(
-                    ', ${country.name}',
-                    style: AppTextStyles.h2.copyWith(
-                      color: AppColors.of(context).textSecondary,
-                    ),
-                  ),
-              ],
+            Text(
+              country != null ? '${_trip.city}, ${country.name}' : _trip.city,
+              style: AppTextStyles.h2.copyWith(
+                color: AppColors.of(context).textSecondary,
+              ),
             ),
             const SizedBox(height: AppSizes.gapDetailsText),
             Text(
@@ -392,7 +381,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               const Center(child: CircularProgressIndicator())
             else if (forecasts != null)
               SizedBox(
-                height: 115,
+                height: AppSizes.weatherListHeight,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: forecasts.length,
@@ -401,8 +390,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   itemBuilder: (context, index) {
                     final day = forecasts[index];
                     return Container(
-                      width: 100,
-                      padding: EdgeInsets.all(AppSizes.paddingSection),
+                      width: AppSizes.weatherCardWidth,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.paddingWeatherCardHorizontal,
+                        vertical: AppSizes.paddingWeatherCardVertical,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: AppColors.of(context).border,
@@ -417,14 +409,14 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(day.icon, color: AppColors.of(context).primary),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: AppSizes.gapWeatherIcon),
                           Text(
                             DateFormatter.formatShortDay(day.date),
                             style: AppTextStyles.label.copyWith(
                               color: AppColors.of(context).textSecondary,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: AppSizes.gapWeatherTemp),
                           Text(
                             '${day.minTemp.round()}° / ${day.maxTemp.round()}°',
                             style: AppTextStyles.body.copyWith(
