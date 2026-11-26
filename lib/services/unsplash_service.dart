@@ -27,13 +27,15 @@ class UnsplashService {
         'orientation': 'landscape',
       });
 
-      final response = await http.get(
-        uri,
-        headers: {
-          'Authorization': 'Client-ID ${ApiConfig.unsplashAccessKey}',
-          'Accept-Version': 'v1',
-        },
-      );
+      final response = await http
+          .get(
+            uri,
+            headers: {
+              'Authorization': 'Client-ID ${ApiConfig.unsplashAccessKey}',
+              'Accept-Version': 'v1',
+            },
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) return null;
 
@@ -49,7 +51,7 @@ class UnsplashService {
         _cache[cacheKey] = imageUrl;
       }
 
-      return urls?['regular'] as String?;
+      return imageUrl;
     } catch (_) {
       return null;
     }
