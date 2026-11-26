@@ -50,4 +50,3 @@ app.*.map.json
 # AGGIUNTA
 lib/config/supabase_config.dart
 lib/config/unsplash_config.dart
-lib/config/countries_config.dart
