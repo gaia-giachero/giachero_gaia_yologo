@@ -1,0 +1,51 @@
+name: iOS unsigned build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build IPA non firmato
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+
+      - name: Crea i file di configurazione
+        env:
+          SUPABASE_CONFIG: ${{ secrets.SUPABASE_CONFIG }}
+          UNSPLASH_CONFIG: ${{ secrets.UNSPLASH_CONFIG }}
+        run: |
+          mkdir -p lib/config
+          printf '%s\n' "$SUPABASE_CONFIG" > lib/config/supabase_config.dart
+          printf '%s\n' "$UNSPLASH_CONFIG" > lib/config/unsplash_config.dart
+
+      - name: Installa Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Scarica le dipendenze
+        run: flutter pub get
+
+      - name: Compila per iOS senza firma
+        run: flutter build ios --release --no-codesign
+
+      - name: Crea il file IPA
+        run: |
+          set -euo pipefail
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -R Runner.app Payload/
+          zip -qr app-unsigned.ipa Payload
+
+      - name: Salva l'IPA come artefatto
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-ios-unsigned
+          path: build/ios/iphoneos/app-unsigned.ipa
+          retention-days: 14
