@@ -11,25 +11,35 @@ class CountryInfo {
     required this.language,
   });
 
-  factory CountryInfo.fromJson(Map<String, dynamic> json) {
-    // 1. Country name
-    final names = json['names'] as Map<String, dynamic>?;
-    final translations = names?['translations'] as Map<String, dynamic>?;
-    final ita = translations?['ita'] as Map<String, dynamic>?;
-    final countryName =
-        (ita?['common'] as String?) ??
-        (names?['common'] as String?) ??
+  factory CountryInfo.fromJson(
+    Map<String, dynamic> json, {
+    String? fallbackName,
+    String? countryCode,
+  }) {
+    final nameField = json['name'];
+    final nameMap = nameField is Map
+        ? Map<String, dynamic>.from(nameField)
+        : null;
+    final translations = json['translations'] is Map
+        ? Map<String, dynamic>.from(json['translations'])
+        : null;
+    final ita = translations?['ita'];
+
+    final String countryName =
+        (ita is Map ? ita['common']?.toString() : ita?.toString()) ??
+        fallbackName ??
+        (nameMap?['common']?.toString() ?? nameField?.toString()) ??
         'Sconosciuto';
 
-    // 2. Flag
-    final flagMap = json['flag'] as Map<String, dynamic>?;
-    final rawFlag = flagMap?['url_png'] as String? ?? '';
-    final flag = rawFlag.replaceFirst(
-      'https://flags.restcountries.com/v5/',
-      'https://flagcdn.com/',
-    );
+    final flagsMap = json['flags'] is Map
+        ? Map<String, dynamic>.from(json['flags'])
+        : null;
+    final flag =
+        (flagsMap?['png']?.toString()) ??
+        (countryCode != null
+            ? 'https://flagcdn.com/w80/${countryCode.toLowerCase()}.png'
+            : '');
 
-    // 3. Currencies and Language
     return CountryInfo(
       name: countryName,
       flagUrl: flag,
@@ -46,11 +56,11 @@ class CountryInfo {
       first = value.values.first;
     }
 
-    if (first is String) return first;
-    if (first is Map<String, dynamic>) {
+    if (first is String && first.isNotEmpty) return first;
+    if (first is Map) {
       for (final key in ['name', 'common', 'english_name']) {
-        final text = first[key];
-        if (text is String && text.isNotEmpty) return text;
+        final text = first[key]?.toString();
+        if (text != null && text.isNotEmpty) return text;
       }
     }
     return null;

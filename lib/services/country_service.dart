@@ -1,23 +1,40 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:giachero_gaia_yologo/config/countries_config.dart';
 import 'package:giachero_gaia_yologo/models/country_info.dart';
 import 'package:http/http.dart' as http;
 
 class CountryService {
   static const Duration _timeout = Duration(seconds: 10);
   static final Map<String, CountryInfo?> _cache = {};
+  static final Map<String, Future<CountryInfo?>> _inFlight = {};
 
-  static Future<CountryInfo?> getCountryInfoForCity(String city) async {
+  static Future<CountryInfo?> getCountryInfoForCity(String city) {
     final cleanCity = city.split(',').first.trim();
-    if (cleanCity.isEmpty) return null;
+    if (cleanCity.isEmpty) return Future.value(null);
 
     final cacheKey = cleanCity.toLowerCase();
+
     if (_cache.containsKey(cacheKey)) {
-      return _cache[cacheKey];
+      return Future.value(_cache[cacheKey]);
     }
 
+    if (_inFlight.containsKey(cacheKey)) {
+      return _inFlight[cacheKey]!;
+    }
+
+    final future = _fetchCountryInfo(cleanCity, cacheKey).whenComplete(() {
+      _inFlight.remove(cacheKey);
+    });
+
+    _inFlight[cacheKey] = future;
+    return future;
+  }
+
+  static Future<CountryInfo?> _fetchCountryInfo(
+    String cleanCity,
+    String cacheKey,
+  ) async {
     try {
       final geoUri = Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
         'name': cleanCity,
@@ -26,67 +43,65 @@ class CountryService {
       });
 
       final geoRes = await http.get(geoUri).timeout(_timeout);
-      if (geoRes.statusCode != 200) {
-        debugPrint('Geocoding: status ${geoRes.statusCode}');
-        return null;
-      }
+      if (geoRes.statusCode != 200) return null;
 
       final geoData = jsonDecode(geoRes.body) as Map<String, dynamic>;
       final geoResults = geoData['results'] as List<dynamic>?;
       if (geoResults == null || geoResults.isEmpty) {
-        debugPrint('Geocoding: nessun risultato per "$cleanCity"');
         _cache[cacheKey] = null;
         return null;
       }
 
       final first = geoResults.first as Map<String, dynamic>;
       final countryCode = first['country_code'] as String?;
+      final geoCountryName = first['country'] as String?;
       if (countryCode == null || countryCode.isEmpty) {
-        debugPrint('Geocoding: country_code mancante per "$cleanCity"');
         _cache[cacheKey] = null;
         return null;
       }
 
       final countryUri = Uri.https(
-        'api.restcountries.com',
-        '/countries/v5/codes.alpha_2/${countryCode.toUpperCase()}',
-        {
-          'response_fields': 'names.common,names.translations,flag.url_png,currencies,languages',
-        },
+        'www.apicountries.com',
+        '/alpha/${countryCode.toUpperCase()}',
       );
 
-      final countryRes = await http
-          .get(
-            countryUri,
-            headers: {
-              'Authorization':
-                  'Bearer ${CountriesConfig.restCountriesAccessKey}',
-            },
-          )
-          .timeout(_timeout);
+      final countryRes = await http.get(countryUri).timeout(_timeout);
+      if (countryRes.statusCode == 200) {
+        final decoded = jsonDecode(countryRes.body);
+        final Map<String, dynamic>? countryMap;
+        if (decoded is List && decoded.isNotEmpty) {
+          countryMap = Map<String, dynamic>.from(decoded.first as Map);
+        } else if (decoded is Map) {
+          countryMap = Map<String, dynamic>.from(decoded);
+        } else {
+          countryMap = null;
+        }
 
-      if (countryRes.statusCode != 200) {
-        debugPrint(
-          'REST Countries: status ${countryRes.statusCode} - ${countryRes.body}',
+        if (countryMap != null) {
+          final info = CountryInfo.fromJson(
+            countryMap,
+            fallbackName: geoCountryName,
+            countryCode: countryCode,
+          );
+          _cache[cacheKey] = info;
+          return info;
+        }
+      }
+
+      if (geoCountryName != null && geoCountryName.isNotEmpty) {
+        final fallback = CountryInfo(
+          name: geoCountryName,
+          flagUrl: 'https://flagcdn.com/w80/${countryCode.toLowerCase()}.png',
+          currency: 'Non disponibile',
+          language: 'Non disponibile',
         );
-        return null;
+        _cache[cacheKey] = fallback;
+        return fallback;
       }
 
-      final decoded = jsonDecode(countryRes.body) as Map<String, dynamic>;
-      final data = decoded['data'] as Map<String, dynamic>?;
-      final objects = data?['objects'] as List<dynamic>?;
-      if (objects == null || objects.isEmpty) {
-        debugPrint('REST Countries: nessun paese per "$countryCode"');
-        _cache[cacheKey] = null;
-        return null;
-      }
-
-      final countryMap = objects.first as Map<String, dynamic>;
-      final info = CountryInfo.fromJson(countryMap);
-      _cache[cacheKey] = info;
-      return info;
-    } catch (e, stack) {
-      debugPrint('Errore CountryService per "$city": $e\n$stack');
+      return null;
+    } catch (e) {
+      debugPrint('Errore CountryService per "$cleanCity": $e');
       return null;
     }
   }
