@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 class WeatherService {
   static const int _maxForecastDays = 16;
+  static const Duration _timeout = Duration(seconds: 10);
 
   static Future<WeatherResult> getWeatherForTrip({
     required String city,
@@ -32,7 +33,6 @@ class WeatherService {
     final effectiveStart = start.isBefore(today) ? today : start;
 
     try {
-      // 1. Geocoding: da nome città a coordinate
       final cleanCity = city.split(',').first.trim();
       final geoUri = Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
         'name': cleanCity,
@@ -40,7 +40,7 @@ class WeatherService {
         'language': 'it',
       });
 
-      final geoResponse = await http.get(geoUri);
+      final geoResponse = await http.get(geoUri).timeout(_timeout);
       if (geoResponse.statusCode != 200) {
         return const WeatherResult(status: WeatherStatus.unavailable);
       }
@@ -55,7 +55,6 @@ class WeatherService {
       final lat = first['latitude'].toString();
       final lon = first['longitude'].toString();
 
-      // 2. Previsioni giornaliere per le date del viaggio
       final weatherUri = Uri.https('api.open-meteo.com', '/v1/forecast', {
         'latitude': lat,
         'longitude': lon,
@@ -65,7 +64,7 @@ class WeatherService {
         'end_date': _formatApiDate(end),
       });
 
-      final weatherResponse = await http.get(weatherUri);
+      final weatherResponse = await http.get(weatherUri).timeout(_timeout);
       if (weatherResponse.statusCode != 200) {
         return const WeatherResult(status: WeatherStatus.unavailable);
       }
