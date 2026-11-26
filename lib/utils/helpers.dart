@@ -17,6 +17,7 @@ class AppSizes {
   static const double gapTextBox = 20;
   static const double gapFieldBox = 6;
   static const double radiusBox = 20;
+  static const double blurBox = 20;
 
   static const double gapTitleCard = 70;
 
