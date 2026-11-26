@@ -1,7 +1,7 @@
 import 'package:giachero_gaia_yologo/models/trip.dart';
 import 'package:giachero_gaia_yologo/models/trip_filters.dart';
 import 'package:giachero_gaia_yologo/models/trip_type.dart';
-import 'package:giachero_gaia_yologo/services/image_service.dart';
+import 'package:giachero_gaia_yologo/services/unsplash_service.dart';
 import 'package:giachero_gaia_yologo/utils/date_formatter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -102,7 +102,7 @@ class TripService {
 
   static Future<String?> _fetchImageSafely(String city) async {
     try {
-      return await ImageService.fetchCityImage(city);
+      return await UnsplashService.fetchDestinationImage(city);
     } catch (_) {
       return null;
     }
