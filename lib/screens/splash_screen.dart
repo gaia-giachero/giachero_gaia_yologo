@@ -7,11 +7,8 @@ import 'package:giachero_gaia_yologo/utils/app_strings.dart';
 import 'package:giachero_gaia_yologo/widgets/animated_globe.dart';
 
 class SplashScreen extends StatefulWidget {
-  /// Operazioni da completare all'avvio (inizializzazioni, controlli...).
-  /// Ogni passaggio completato fa crescere il logo.
   final List<Future<void> Function()> steps;
 
-  /// Schermata da mostrare quando tutto è pronto.
   final Widget next;
 
   const SplashScreen({required this.steps, required this.next, super.key});
