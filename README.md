@@ -1,42 +1,41 @@
 # YoloGo
 
-App Flutter per scoprire e proporre viaggi last-minute. Ogni utente può esplorare le proposte degli altri, salvarle tra i preferiti e creare i propri viaggi. Progetto finale del corso Flutter & Dart.
+A Flutter app to discover and share last-minute trips. Every user can look at other people's trips, save them as favorites, and create their own trips. Final project of the Flutter & Dart course.
 
-## Funzionalità
+## Features
 
-- Login con Supabase Auth e splash screen animata (globo con aereo) durante l'avvio
-- **Home**: destinazioni popolari (le più presenti nel database) che aprono Esplora già filtrato
-- **Esplora**: ricerca per testo, prezzo massimo e tipologia di viaggio
-- **Dettaglio**: informazioni sul paese e meteo previsto per le date del viaggio
-- **Crea / modifica / elimina** un viaggio con form validato (solo il proprietario può modificarlo o eliminarlo)
-- **Preferiti**: lista dei viaggi aggiunti ai preferiti
-- **Profilo**: impostazioni e lista dei viaggi creati
-- **Impostazioni**: tema chiaro/scuro salvato con SharedPreferences
+- Login with Supabase Auth and an animated splash screen (a globe with a plane) while the app starts
+- **Home**: popular destinations (the ones that appear most in the database) that open Explore already filtered
+- **Explore**: search by text, maximum price, and type of trip
+- **Details**: information about the country and the weather forecast for the trip dates
+- **Create / edit / delete** a trip with a validated form (only the owner can edit or delete it)
+- **Favorites**: list of the trips added to favorites
+- **Profile**: settings and list of the trips you created
+- **Settings**: light/dark theme saved with SharedPreferences
 
-## API e servizi usati
+## APIs and services used
 
-| Servizio             | Endpoint                                                         | Uso                                            |
-| -------------------- | ---------------------------------------------------------------- | ---------------------------------------------- |
-| Unsplash             | `api.unsplash.com/search/photos`                                 | immagine di copertina per città                |
-| Open-Meteo Geocoding | `geocoding-api.open-meteo.com/v1/search`                         | coordinate e codice paese della città          |
-| Open-Meteo Forecast  | `api.open-meteo.com/v1/forecast`                                 | previsioni giornaliere per le date del viaggio |
-| REST Countries       | `www.apicountries.com/alpha/{codice}`                            | dati del paese (lingua, valuta, ...)           |
-| Supabase             | tabelle `trips`, `favorites`, `profiles`, `popular_destinations` | autenticazione e dati dell'app                 |
+| Service              | Endpoint                                                        | Use                                      |
+| -------------------- | --------------------------------------------------------------- | ---------------------------------------- |
+| Unsplash             | `api.unsplash.com/search/photos`                                | cover image for each city                |
+| Open-Meteo Geocoding | `geocoding-api.open-meteo.com/v1/search`                        | coordinates and country code of the city |
+| Open-Meteo Forecast  | `api.open-meteo.com/v1/forecast`                                | daily forecast for the trip dates        |
+| REST Countries       | `www.apicountries.com/alpha/{codice}`                           | country data (language, currency, ...)   |
+| Supabase             | tables `trips`, `favorites`, `profiles`, `popular_destinations` | authentication and app data              |
 
-Le chiamate HTTP usano il pacchetto `http`. Loading, errore e "riprova" sono gestiti nei flussi di rete (lista Esplora, Home, Preferiti, Profilo, Dettaglio).
+HTTP calls use the `http` package. Loading, errors, and "try again" are handled in the network flows (Explore list, Home, Favorites, Profile, Details).
 
-## Configurazione
+## Setup
 
 1. `flutter pub get`
-2. Copia ogni file `lib/config/*.example.dart` nel corrispondente `*.dart` (senza `.example`) e inserisci le tue chiavi:
-   - `supabase_config.dart`: URL e chiave pubblica del progetto Supabase
-   - `unsplash_config.dart`: access key di Unsplash
+2. Copy each `lib/config/*.example.dart` file to the matching `*.dart` file (without `.example`) and add your own keys:
+   - `supabase_config.dart`: URL and public key of the Supabase project
+   - `unsplash_config.dart`: Unsplash access key
 3. `flutter run`
+   Configuration files with the real keys must not be committed.
 
-I file di configurazione con le chiavi reali non vanno committati.
+## Notes
 
-## Note
-
-- Gestione dello stato con `setState`; i preferiti sono centralizzati nella schermata principale e passati alle schermate figlie.
-- Le risposte di Unsplash, paese e meteo sono messe in cache per rispettare i limiti delle API gratuite (Unsplash circa 50 richieste all'ora in modalità demo).
-- Il meteo è disponibile solo per le date entro il limite di previsione di Open-Meteo.
+- State management uses `setState`; favorites are kept in one place in the main screen and passed down to the child screens.
+- Responses from Unsplash, the country API, and the weather API are cached to respect the limits of the free APIs (Unsplash allows about 50 requests per hour in demo mode).
+- Weather is only available for dates within the Open-Meteo forecast limit.
